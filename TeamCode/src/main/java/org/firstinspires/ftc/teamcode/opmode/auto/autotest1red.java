@@ -18,12 +18,11 @@ public class autotest1red extends LinearOpMode {
     public void runOpMode() throws InterruptedException{
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
 
-        TrajectorySequence hometoboard = drive.trajectorySequenceBuilder(new Pose2d(-67.00, -40.00, Math.toRadians(180)))
-                .setReversed(true)
-                .splineToSplineHeading(new Pose2d(-14.75, -42.64, Math.toRadians(60.00)), Math.toRadians(235.00))
-                .splineToSplineHeading(new Pose2d(-4.77, -1.69, Math.toRadians(60.00)), Math.toRadians(270.00))
-                .splineToSplineHeading(new Pose2d(14.46, 18.72, Math.toRadians(45.43)), Math.toRadians(235))
-                .splineToSplineHeading(new Pose2d(35.00, 40.00, Math.toRadians(90.00)), Math.toRadians(240))
+        TrajectorySequence hometoboard = drive.trajectorySequenceBuilder(new Pose2d(-67.00, -40.00, Math.toRadians(0)))
+                .splineToSplineHeading(new Pose2d(-14.75, -42.64, Math.toRadians(60.00)), Math.toRadians(55.00))
+                .splineToSplineHeading(new Pose2d(-4.77, -1.69, Math.toRadians(60.00)), Math.toRadians(90.00))
+                .splineToSplineHeading(new Pose2d(14.46, 18.72, Math.toRadians(45.43)), Math.toRadians(55))
+                .splineToSplineHeading(new Pose2d(35.00, 40.00, Math.toRadians(90.00)), Math.toRadians(90))
                 .build();
 
         Pose2d startPose = new Pose2d(-67, -40, Math.toRadians(0));
