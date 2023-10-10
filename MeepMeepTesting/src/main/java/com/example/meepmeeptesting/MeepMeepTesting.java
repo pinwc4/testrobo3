@@ -27,7 +27,7 @@ public class MeepMeepTesting {
 
         AddTrajectorySequenceCallback blue2red = drive ->
                 drive.trajectorySequenceBuilder(new Pose2d(-63.00, -40.00, Math.toRadians(0.00)))
-                        .splineTo(new Vector2d(-20.00, -40.00), Math.toRadians(-0.89))
+                        .splineTo(new Vector2d(-20.00, -40.00), Math.toRadians(0.00))
                         .splineTo(new Vector2d(9.95, 12.00), Math.toRadians(60.00))
                         .splineToSplineHeading(new Pose2d(37.00, 46.60, Math.toRadians(90.00)), Math.toRadians(50.00))
                         .build();
@@ -39,6 +39,14 @@ public class MeepMeepTesting {
                         .splineTo(new Vector2d(-0.36, -22.86), Math.toRadians(269.24))
                         .build();
 
+        AddTrajectorySequenceCallback blue2red2 = drive ->
+                drive.trajectorySequenceBuilder(new Pose2d(-63.00, -40.00, Math.toRadians(0.00)))
+                        .splineToSplineHeading(new Pose2d(-14.75, -42.64, Math.toRadians(60.00)), Math.toRadians(55.00))
+                        .splineToSplineHeading(new Pose2d(-4.77, -1.69, Math.toRadians(60.00)), Math.toRadians(90.00))
+                        .splineToSplineHeading(new Pose2d(14.46, 18.72, Math.toRadians(45.43)), Math.toRadians(55))
+                        .splineToSplineHeading(new Pose2d(35.00, 40.00, Math.toRadians(90.00)), Math.toRadians(90))
+                        .build();
+
 
 
         AddTrajectorySequenceCallback[] trajArray = {blue2red, junk};
@@ -47,7 +55,7 @@ public class MeepMeepTesting {
         RoadRunnerBotEntity myBot2 = new DefaultBotBuilder(meepMeep)
                 // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
                 .setConstraints(70, 70, Math.toRadians(180), Math.toRadians(180), 15)
-                .followTrajectorySequence(junk);
+                .followTrajectorySequence(blue2red);
 
 
         Image img = null;
