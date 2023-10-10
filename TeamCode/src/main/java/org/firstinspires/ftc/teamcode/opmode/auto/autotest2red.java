@@ -22,8 +22,8 @@ public class autotest2red extends LinearOpMode {
         drive.setPoseEstimate(startPose);
 
         TrajectorySequence hometoboard = drive.trajectorySequenceBuilder(startPose)
-                .splineTo(new Vector2d(-20.00, -40.00), Math.toRadians(0.00))
-                .splineTo(new Vector2d(9.95, 12.00), Math.toRadians(60.00))
+                .splineTo(new Vector2d(-24.00, -40.00), Math.toRadians(0.00))
+                .splineTo(new Vector2d(6, 12.00), Math.toRadians(60.00))
                 .splineToSplineHeading(new Pose2d(37.00, 46.60, Math.toRadians(90.00)), Math.toRadians(50.00))
                 .build();
 

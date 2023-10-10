@@ -30,8 +30,9 @@ public class Robot {
         navxMicro = hardwareMap.get(NavxMicroNavigationSensor.class, "navx");
         navxgyro = (IntegratingGyroscope)navxMicro;
 
-        drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         drive = new SampleMecanumDrive(hardwareMap);
+        drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
 
 
     }
