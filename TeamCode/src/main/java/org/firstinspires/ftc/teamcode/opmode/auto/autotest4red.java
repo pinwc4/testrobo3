@@ -29,18 +29,18 @@ public class autotest4red extends OpMode {
         robot = new Robot(hardwareMap);
         startPose = new Pose2d(-63, -40, Math.toRadians(0));
 
-        fastModeVel = new MecanumVelocityConstraint(60, DriveConstants.TRACK_WIDTH);
+        fastModeVel = new MecanumVelocityConstraint(70, DriveConstants.TRACK_WIDTH);
 
 
         hometoboard = robot.drive.trajectorySequenceBuilder(startPose)
                 .setVelConstraint(fastModeVel)
-                .splineTo(new Vector2d(-24.00, -40.00), Math.toRadians(0.00))
-                .splineToConstantHeading(new Vector2d(6, 12.00), Math.toRadians(50.00))
-                .splineToSplineHeading(new Pose2d(37.00, 45, Math.toRadians(90.00)), Math.toRadians(50.00))
+                .splineTo(new Vector2d(-32.00, -40.00), Math.toRadians(0.00))
+                .splineToConstantHeading(new Vector2d(0, 12.00), Math.toRadians(50.00))
+                .splineToSplineHeading(new Pose2d(37.00, 42, Math.toRadians(90.00)), Math.toRadians(50.00))
                 .build();
 
         boardtosomewhere = robot.drive.trajectorySequenceBuilder(hometoboard.end())
-                .lineToConstantHeading(new Vector2d(60, 20))
+                .lineToConstantHeading(new Vector2d(58, 20))
                 .build();
     }
 
