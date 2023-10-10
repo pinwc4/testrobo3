@@ -23,6 +23,9 @@ android {
     }
 }
 
+repositories {
+    maven { url = 'https://jitpack.io' }
+}
 
 dependencies {
     implementation project(':FtcRobotController')
@@ -31,4 +34,5 @@ dependencies {
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.12.7'
     implementation 'com.acmerobotics.roadrunner:core:0.5.6'
     implementation 'org.ftclib.ftclib:core:2.0.1'
+    implementation 'com.github.Eeshwar-Krishnan:PhotonFTC:68fc4d2'
 }
