@@ -115,4 +115,10 @@ public class telopmfieldcentric  extends OpMode {
         telemetry.addData("imu heading", orientation.getYaw(AngleUnit.DEGREES));
         telemetry.update();
     }
+
+    @Override
+    public void stop() {
+
+    }
+
 }
