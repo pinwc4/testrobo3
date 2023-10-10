@@ -26,9 +26,9 @@ public class autotest3red extends OpMode {
 
         hometoboard = robot.drive.trajectorySequenceBuilder(startPose)
                 .splineTo(new Vector2d(-24.00, -40.00), Math.toRadians(0.00))
-                .splineTo(new Vector2d(6, 12.00), Math.toRadians(60.00))
+                .splineToConstantHeading(new Vector2d(6, 12.00), Math.toRadians(50.00))
                 .splineToSplineHeading(new Pose2d(37.00, 45, Math.toRadians(90.00)), Math.toRadians(50.00))
-                .build();
+                .build()
     }
 
     /*
