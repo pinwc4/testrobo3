@@ -48,7 +48,7 @@ public class autotest3red extends OpMode {
         Orientation angles = robot.navxgyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
         AngularVelocity angularVelocity = robot.imu.getRobotAngularVelocity(AngleUnit.DEGREES);
         YawPitchRollAngles orientation = robot.imu.getRobotYawPitchRollAngles();
-        
+
         telemetry.addData("x", poseEstimate.getX());
         telemetry.addData("y", poseEstimate.getY());
         telemetry.addData("heading", Math.toDegrees(poseEstimate.getHeading()));
