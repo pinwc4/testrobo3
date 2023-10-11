@@ -94,8 +94,13 @@ public class telopboth  extends OpMode {
             //Check to see if we are locking our heading
             if (lockHeading) {
                 //Ignore gamepad input if it is tiny to avoid noise accumulating
-                if (gamerx > 0.05) {
+                if (gamerx > 0.05 || gamerx < -0.05) {
                     targetHeading = targetHeading + (-(gamerx * Math.abs(gamerx)) * 10);
+                    if (targetHeading > 180) {
+                        targetHeading = targetHeading - 360;
+                    } else if (targetHeading < -180) {
+                        targetHeading = targetHeading + 360;
+                    }
                 }
                 headingController.setTargetPosition(Math.toRadians(targetHeading));
                 double headingInput = (headingController.update(currentHeading) * DriveConstants.kV) * DriveConstants.TRACK_WIDTH;
@@ -118,6 +123,10 @@ public class telopboth  extends OpMode {
 
         if (driverGamepad.wasJustPressed(GamepadKeys.Button.DPAD_RIGHT)|| driverGamepad.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)) {
             targetHeading = -135.0;
+        }
+
+        if (driverGamepad.wasJustPressed(GamepadKeys.Button.DPAD_UP)) {
+            robot.imu.resetYaw();
         }
 
         robot.drive.setWeightedDrivePower(drivePowers);
