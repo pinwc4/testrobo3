@@ -6,6 +6,7 @@ import com.acmerobotics.roadrunner.control.PIDFController;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.arcrobotics.ftclib.gamepad.ToggleButtonReader;
+import com.outoftheboxrobotics.photoncore.Photon;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -17,6 +18,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 import org.firstinspires.ftc.teamcode.hardware.Robot;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.DriveConstants;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
+
 
 @TeleOp(name="Switchable Opmode")
 public class telopboth  extends OpMode {
@@ -50,6 +52,7 @@ public class telopboth  extends OpMode {
     //This method runs once after the start button is pressed
     @Override
     public void start() {
+        robot.imu.resetYaw();
         robot.timer.reset();
     }
 
@@ -58,8 +61,10 @@ public class telopboth  extends OpMode {
     public void loop() {
         double starttime = robot.timer.milliseconds();
         driverGamepad.readButtons();
+
         Pose2d poseEstimate = robot.drive.getPoseEstimate();
-        currentHeading = poseEstimate.getHeading();
+        //currentHeading = poseEstimate.getHeading();
+        currentHeading = robot.imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
 
         double gamely = driverGamepad.getLeftY();
         double gamelx = driverGamepad.getLeftX();
@@ -84,7 +89,7 @@ public class telopboth  extends OpMode {
 
             //Check to see if we are locking our heading
             if (lockHeading.getState()) {
-                headingController.setTargetPosition(-90.0);
+                headingController.setTargetPosition(Math.toRadians(90.0));
                 double headingInput = (headingController.update(currentHeading) * DriveConstants.kV) * DriveConstants.TRACK_WIDTH;
                 drivePowers = new Pose2d(input, headingInput);
             } else {
@@ -105,7 +110,7 @@ public class telopboth  extends OpMode {
             } else {
                 turnAngle = currentHeading - 270;
             }
-            robot.drive.turnAsync(turnAngle);
+            robot.drive.turn(Math.toRadians(turnAngle));
         }
 
         if (driverGamepad.wasJustPressed(GamepadKeys.Button.DPAD_RIGHT)|| driverGamepad.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)) {
@@ -114,7 +119,7 @@ public class telopboth  extends OpMode {
             } else {
                 turnAngle = currentHeading + 225;
             }
-            robot.drive.turnAsync(turnAngle);
+            robot.drive.turnAsync(Math.toRadians(turnAngle));
         }
 
         robot.drive.setWeightedDrivePower(drivePowers);
@@ -132,8 +137,9 @@ public class telopboth  extends OpMode {
         telemetry.addData("heading", Math.toDegrees(poseEstimate.getHeading()));
         telemetry.addData("navx heading", angles.firstAngle);
         telemetry.addData("imu heading", orientation.getYaw(AngleUnit.DEGREES));
+        telemetry.addData("locked heading", lockHeading.getState());
         telemetry.update();
-
+        lockHeading.readValue();
     }
 
     //This runs when the stop button is pressed on the driver hub
