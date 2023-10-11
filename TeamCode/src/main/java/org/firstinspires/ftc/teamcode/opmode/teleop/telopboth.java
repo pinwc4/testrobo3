@@ -25,10 +25,12 @@ public class telopboth  extends OpMode {
     private Robot robot;
     private GamepadEx driverGamepad;
     private Pose2d drivePowers;
-    private ToggleButtonReader lockHeading;
+    private ToggleButtonReader lockHeadingReader;
+    private boolean lockHeading = false;
     private PIDFController headingController;
     private double currentHeading;
     private double turnAngle;
+    private double targetHeading = 90;
 
     //This method runs once when the init button is pressed on the driver hub
     @Override
@@ -36,7 +38,7 @@ public class telopboth  extends OpMode {
         robot = new Robot(hardwareMap);
         driverGamepad = new GamepadEx(gamepad1);
         drivePowers = new Pose2d();
-        lockHeading = new ToggleButtonReader(driverGamepad, GamepadKeys.Button.X);
+        lockHeadingReader = new ToggleButtonReader(driverGamepad, GamepadKeys.Button.X);
         headingController = new PIDFController(SampleMecanumDrive.HEADING_PID);
         turnAngle = 0;
     }
@@ -61,6 +63,8 @@ public class telopboth  extends OpMode {
     public void loop() {
         double starttime = robot.timer.milliseconds();
         driverGamepad.readButtons();
+        lockHeadingReader.readValue();
+        lockHeading = lockHeadingReader.getState();
 
         Pose2d poseEstimate = robot.drive.getPoseEstimate();
         //currentHeading = poseEstimate.getHeading();
@@ -88,8 +92,12 @@ public class telopboth  extends OpMode {
             ).rotated(-currentHeading);
 
             //Check to see if we are locking our heading
-            if (lockHeading.getState()) {
-                headingController.setTargetPosition(Math.toRadians(90.0));
+            if (lockHeading) {
+                //Ignore gamepad input if it is tiny to avoid noise accumulating
+                if (gamerx > 0.05) {
+                    targetHeading = targetHeading + (-(gamerx * Math.abs(gamerx)) * 10);
+                }
+                headingController.setTargetPosition(Math.toRadians(targetHeading));
                 double headingInput = (headingController.update(currentHeading) * DriveConstants.kV) * DriveConstants.TRACK_WIDTH;
                 drivePowers = new Pose2d(input, headingInput);
             } else {
@@ -105,21 +113,11 @@ public class telopboth  extends OpMode {
         }
 
         if (driverGamepad.wasJustPressed(GamepadKeys.Button.DPAD_LEFT) || driverGamepad.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER)) {
-            if (currentHeading >= -180.0 && currentHeading < 90.0){
-                turnAngle = currentHeading + 90;
-            } else {
-                turnAngle = currentHeading - 270;
-            }
-            robot.drive.turn(Math.toRadians(turnAngle));
+            targetHeading = 90.0;
         }
 
         if (driverGamepad.wasJustPressed(GamepadKeys.Button.DPAD_RIGHT)|| driverGamepad.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)) {
-            if (currentHeading >= -45.0 && currentHeading <= 180.0){
-                turnAngle = currentHeading - 135.0;
-            } else {
-                turnAngle = currentHeading + 225;
-            }
-            robot.drive.turnAsync(Math.toRadians(turnAngle));
+            targetHeading = -135.0;
         }
 
         robot.drive.setWeightedDrivePower(drivePowers);
@@ -137,9 +135,10 @@ public class telopboth  extends OpMode {
         telemetry.addData("heading", Math.toDegrees(poseEstimate.getHeading()));
         telemetry.addData("navx heading", angles.firstAngle);
         telemetry.addData("imu heading", orientation.getYaw(AngleUnit.DEGREES));
-        telemetry.addData("locked heading", lockHeading.getState());
+        telemetry.addData("locked heading", lockHeading);
+        telemetry.addData("target heading", targetHeading);
         telemetry.update();
-        lockHeading.readValue();
+
     }
 
     //This runs when the stop button is pressed on the driver hub
