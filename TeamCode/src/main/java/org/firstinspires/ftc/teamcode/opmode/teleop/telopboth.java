@@ -99,7 +99,7 @@ public class telopboth  extends OpMode {
 
         }
 
-        if (driverGamepad.wasJustPressed(GamepadKeys.Button.DPAD_LEFT)) {
+        if (driverGamepad.wasJustPressed(GamepadKeys.Button.DPAD_LEFT) || driverGamepad.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER)) {
             if (currentHeading >= -180.0 && currentHeading < 90.0){
                 turnAngle = currentHeading + 90;
             } else {
@@ -108,7 +108,7 @@ public class telopboth  extends OpMode {
             robot.drive.turnAsync(turnAngle);
         }
 
-        if (driverGamepad.wasJustPressed(GamepadKeys.Button.DPAD_RIGHT)) {
+        if (driverGamepad.wasJustPressed(GamepadKeys.Button.DPAD_RIGHT)|| driverGamepad.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)) {
             if (currentHeading >= -45.0 && currentHeading <= 180.0){
                 turnAngle = currentHeading - 135.0;
             } else {
