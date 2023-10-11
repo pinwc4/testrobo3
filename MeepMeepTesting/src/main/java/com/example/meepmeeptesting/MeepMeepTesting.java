@@ -44,6 +44,7 @@ public class MeepMeepTesting {
                         .splineTo(new Vector2d(-24.00, -40.00), Math.toRadians(0.00))
                         .splineToConstantHeading(new Vector2d(6, 12.00), Math.toRadians(50.00))
                         .splineToSplineHeading(new Pose2d(37.00, 45, Math.toRadians(90.00)), Math.toRadians(50.00))
+                        .turn(Math.toRadians(-90))
                         .build();
 
 
