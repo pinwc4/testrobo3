@@ -64,7 +64,7 @@ public class telopboth  extends OpMode {
             // Create a vector from the gamepad x/y inputs
             // Then, rotate that vector by the inverse of that heading
             Vector2d input = new Vector2d(
-                    -(gamely * Math.abs(gamely)),
+                    (gamely * Math.abs(gamely)),
                     -(gamelx * Math.abs(gamelx))
             ).rotated(-poseEstimate.getHeading());
 
@@ -74,7 +74,7 @@ public class telopboth  extends OpMode {
 
         } else {
             //Robot Centric driving
-            drivePowers = new Pose2d(-(gamely * Math.abs(gamely)), -(gamelx * Math.abs(gamelx)), -(gamerx * Math.abs(gamerx)));
+            drivePowers = new Pose2d((gamely * Math.abs(gamely)), -(gamelx * Math.abs(gamelx)), -(gamerx * Math.abs(gamerx)));
 
         }
         robot.drive.setWeightedDrivePower(drivePowers);
