@@ -27,7 +27,6 @@ public class Robot {
     public Robot(HardwareMap hardwareMap) {
         //Define hardware map items first
         imu = hardwareMap.get(IMU.class, "imu");
-        navxMicro = hardwareMap.get(NavxMicroNavigationSensor.class, "navx");
 
         IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
                 RevHubOrientationOnRobot.LogoFacingDirection.UP,

@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.opmode.teleop;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.util.Angle;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.control.PIDFController;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
@@ -31,6 +32,7 @@ public class telopboth  extends OpMode {
     private double currentHeading;
     private double turnAngle;
     private double targetHeading = 90;
+    private double headingDeviation = 0;
 
     //This method runs once when the init button is pressed on the driver hub
     @Override
@@ -66,9 +68,15 @@ public class telopboth  extends OpMode {
         lockHeadingReader.readValue();
         lockHeading = lockHeadingReader.getState();
 
+        Orientation angles = robot.navxgyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        YawPitchRollAngles orientation = robot.imu.getRobotYawPitchRollAngles();
+
         Pose2d poseEstimate = robot.drive.getPoseEstimate();
+        //Can get current heading from 3 different sensors
+        //Odometry pods, built in imu, or external navx gyro
         //currentHeading = poseEstimate.getHeading();
-        currentHeading = robot.imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
+        //currentHeading = robot.imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
+        currentHeading = Math.toRadians(angles.firstAngle);
 
         double gamely = driverGamepad.getLeftY();
         double gamelx = driverGamepad.getLeftX();
@@ -95,15 +103,35 @@ public class telopboth  extends OpMode {
             if (lockHeading) {
                 //Ignore gamepad input if it is tiny to avoid noise accumulating
                 if (gamerx > 0.05 || gamerx < -0.05) {
-                    targetHeading = targetHeading + (-(gamerx * Math.abs(gamerx)) * 10);
+                    targetHeading = targetHeading + (-(gamerx * Math.abs(gamerx)) * 6);
+
                     if (targetHeading > 180) {
                         targetHeading = targetHeading - 360;
                     } else if (targetHeading < -180) {
                         targetHeading = targetHeading + 360;
                     }
+
+
+                    //targetHeading = Math.toDegrees(angleWrap(Math.toRadians(targetHeading)));
                 }
-                headingController.setTargetPosition(Math.toRadians(targetHeading));
-                double headingInput = (headingController.update(currentHeading) * DriveConstants.kV) * DriveConstants.TRACK_WIDTH;
+
+                //Calculate the differenc between our current heading and target
+                //This is used with the PID so that we do not have to deal with angle wrap
+                //The pid target is 0 degrees and we just give it how far off we are
+                headingDeviation = Math.toDegrees(currentHeading) - targetHeading;
+
+                //Still have to angle wrap our deviation because it can end up being greater
+                //Than 180 degrees and try to go the wrong direction
+                //headingDeviation = angleWrap(Math.toRadians(headingDeviation));
+                headingDeviation = Angle.normDelta(Math.toRadians(headingDeviation));
+
+                headingController.setTargetPosition(0);
+                double headingInput = (headingController.update(headingDeviation) * DriveConstants.kV) * DriveConstants.TRACK_WIDTH;
+
+                //Do not do this, it does not handle angle wrap properly
+                //headingController.setTargetPosition(Math.toRadians(targetHeading));
+                //double headingInput = (headingController.update(currentHeading) * DriveConstants.kV) * DriveConstants.TRACK_WIDTH;
+
                 drivePowers = new Pose2d(input, headingInput);
             } else {
                 // Pass in the rotated input + right stick value for rotation
@@ -125,15 +153,16 @@ public class telopboth  extends OpMode {
             targetHeading = -135.0;
         }
 
-        if (driverGamepad.wasJustPressed(GamepadKeys.Button.DPAD_UP)) {
+        if (driverGamepad.wasJustPressed(GamepadKeys.Button.Y) && driverGamepad.getButton(GamepadKeys.Button.DPAD_UP)) {
             robot.imu.resetYaw();
+            robot.navxMicro.initialize();
+            robot.drive.setPoseEstimate(new Pose2d(0, 0, Math.toRadians(0)));
         }
 
         robot.drive.setWeightedDrivePower(drivePowers);
         robot.drive.update();
 
-        Orientation angles = robot.navxgyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-        YawPitchRollAngles orientation = robot.imu.getRobotYawPitchRollAngles();
+
 
         double elapsedtime = robot.timer.milliseconds() - starttime;
         // Print pose to telemetry
@@ -141,11 +170,13 @@ public class telopboth  extends OpMode {
         telemetry.addData("mode", robot.controls);
         telemetry.addData("x", poseEstimate.getX());
         telemetry.addData("y", poseEstimate.getY());
-        telemetry.addData("heading", Math.toDegrees(poseEstimate.getHeading()));
+        telemetry.addData("current heading", Math.toDegrees(currentHeading));
+        telemetry.addData("pose heading", Math.toDegrees(poseEstimate.getHeading()));
         telemetry.addData("navx heading", angles.firstAngle);
         telemetry.addData("imu heading", orientation.getYaw(AngleUnit.DEGREES));
         telemetry.addData("locked heading", lockHeading);
         telemetry.addData("target heading", targetHeading);
+        telemetry.addData("heading deviation", Math.toDegrees(headingDeviation));
         telemetry.update();
 
     }
@@ -157,5 +188,17 @@ public class telopboth  extends OpMode {
 
     }
     */
+// This function normalizes the angle so it returns a value between -180° and 180° instead of 0° to 360°.
+    public double angleWrap(double radians) {
 
+        while (radians > Math.PI) {
+            radians -= 2 * Math.PI;
+        }
+        while (radians < -Math.PI) {
+            radians += 2 * Math.PI;
+        }
+
+        // keep in mind that the result is in radians
+        return radians;
+    }
 }
