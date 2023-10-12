@@ -4,6 +4,9 @@ import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.util.Angle;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.control.PIDFController;
+import com.arcrobotics.ftclib.command.CommandScheduler;
+import com.arcrobotics.ftclib.command.button.Button;
+import com.arcrobotics.ftclib.command.button.GamepadButton;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.arcrobotics.ftclib.gamepad.ToggleButtonReader;
@@ -19,9 +22,10 @@ import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 import org.firstinspires.ftc.teamcode.hardware.Robot;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.DriveConstants;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.subsystems.Claw;
 
 
-@TeleOp(name="Switchable Opmode")
+@TeleOp(name="Claw Opmode")
 public class telopboth  extends OpMode {
     private Robot robot;
     private GamepadEx driverGamepad;
@@ -33,12 +37,20 @@ public class telopboth  extends OpMode {
     private double turnAngle;
     private double targetHeading = 90;
     private double headingDeviation = 0;
+    private Claw claw;
+    private Button clawButton;
+
 
     //This method runs once when the init button is pressed on the driver hub
     @Override
     public void init() {
         robot = new Robot(hardwareMap);
+        claw = new Claw(robot);
+
         driverGamepad = new GamepadEx(gamepad1);
+        clawButton = new GamepadButton(driverGamepad, GamepadKeys.Button.A);
+        clawButton.whenPressed(claw::toggle);
+
         drivePowers = new Pose2d();
         lockHeadingReader = new ToggleButtonReader(driverGamepad, GamepadKeys.Button.X);
         headingController = new PIDFController(SampleMecanumDrive.HEADING_PID);
@@ -159,6 +171,10 @@ public class telopboth  extends OpMode {
             robot.drive.setPoseEstimate(new Pose2d(0, 0, Math.toRadians(0)));
         }
 
+        if (driverGamepad.wasJustPressed(GamepadKeys.Button.B)) {
+            claw.toggle();
+        }
+
         robot.drive.setWeightedDrivePower(drivePowers);
         robot.drive.update();
 
@@ -177,8 +193,9 @@ public class telopboth  extends OpMode {
         telemetry.addData("locked heading", lockHeading);
         telemetry.addData("target heading", targetHeading);
         telemetry.addData("heading deviation", Math.toDegrees(headingDeviation));
+        telemetry.addData("claw state", claw.getState());
         telemetry.update();
-
+        CommandScheduler.getInstance().run();
     }
 
     //This runs when the stop button is pressed on the driver hub
@@ -188,17 +205,5 @@ public class telopboth  extends OpMode {
 
     }
     */
-// This function normalizes the angle so it returns a value between -180° and 180° instead of 0° to 360°.
-    public double angleWrap(double radians) {
 
-        while (radians > Math.PI) {
-            radians -= 2 * Math.PI;
-        }
-        while (radians < -Math.PI) {
-            radians += 2 * Math.PI;
-        }
-
-        // keep in mind that the result is in radians
-        return radians;
-    }
 }
