@@ -11,6 +11,7 @@ import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.arcrobotics.ftclib.gamepad.ToggleButtonReader;
 import com.outoftheboxrobotics.photoncore.Photon;
+import com.qualcomm.hardware.dfrobot.HuskyLens;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -181,7 +182,7 @@ public class telopboth  extends OpMode {
         robot.drive.setWeightedDrivePower(drivePowers);
         robot.drive.update();
 
-
+        //HuskyLens.Block[] blocks = robot.huskyLens.blocks();
 
         double elapsedtime = robot.timer.milliseconds() - starttime;
         // Print pose to telemetry
@@ -190,14 +191,13 @@ public class telopboth  extends OpMode {
         telemetry.addData("x", poseEstimate.getX());
         telemetry.addData("y", poseEstimate.getY());
         telemetry.addData("current heading", Math.toDegrees(currentHeading));
-        telemetry.addData("pose heading", Math.toDegrees(poseEstimate.getHeading()));
-        telemetry.addData("navx heading", angles.firstAngle);
-        telemetry.addData("imu heading", orientation.getYaw(AngleUnit.DEGREES));
         telemetry.addData("locked heading", lockHeading);
         telemetry.addData("target heading", targetHeading);
         telemetry.addData("heading deviation", Math.toDegrees(headingDeviation));
         telemetry.addData("claw state", robot.clawSubsystem.getState());
-        telemetry.addData("claw period", robot.clawSubsystem.period);
+        //for (int i = 0; i < blocks.length; i++) {
+        //    telemetry.addData("Block", blocks[i].toString());
+        //}
         telemetry.update();
         CommandScheduler.getInstance().run();
     }

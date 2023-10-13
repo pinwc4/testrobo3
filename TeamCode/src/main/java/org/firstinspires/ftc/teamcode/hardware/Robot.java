@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.hardware;
 
 import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
+import com.qualcomm.hardware.dfrobot.HuskyLens;
 import com.qualcomm.hardware.kauailabs.NavxMicroNavigationSensor;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -30,6 +31,7 @@ public class Robot {
     public Servo clawServo;
     public Claw clawSubsystem;
     public DistanceSensor rightDistance;
+    public HuskyLens huskyLens;
 
     public Robot(HardwareMap hardwareMap) {
         //Define hardware map items first
@@ -51,6 +53,9 @@ public class Robot {
         clawSubsystem = new Claw(clawServo);
 
         rightDistance = hardwareMap.get(DistanceSensor.class, "rightDistance");
+
+        huskyLens = hardwareMap.get(HuskyLens.class, "huskyLens");
+        huskyLens.selectAlgorithm(HuskyLens.Algorithm.TAG_RECOGNITION);
 
         CommandScheduler.getInstance().reset();
         CommandScheduler.getInstance().registerSubsystem(clawSubsystem);
