@@ -19,6 +19,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
+import org.firstinspires.ftc.teamcode.commands.ClawCommand;
 import org.firstinspires.ftc.teamcode.hardware.Robot;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.DriveConstants;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
@@ -37,7 +38,6 @@ public class telopboth  extends OpMode {
     private double turnAngle;
     private double targetHeading = 90;
     private double headingDeviation = 0;
-    private Claw claw;
     private Button clawButton;
 
 
@@ -45,16 +45,17 @@ public class telopboth  extends OpMode {
     @Override
     public void init() {
         robot = new Robot(hardwareMap);
-        claw = new Claw(robot);
 
         driverGamepad = new GamepadEx(gamepad1);
+
         clawButton = new GamepadButton(driverGamepad, GamepadKeys.Button.A);
-        clawButton.whenPressed(claw::toggle);
+        clawButton.whenPressed(new ClawCommand(robot));
 
         drivePowers = new Pose2d();
         lockHeadingReader = new ToggleButtonReader(driverGamepad, GamepadKeys.Button.X);
         headingController = new PIDFController(SampleMecanumDrive.HEADING_PID);
         turnAngle = 0;
+
     }
 
     //After init is complete this method runs repeatably after init until the play button is pressed
@@ -172,7 +173,7 @@ public class telopboth  extends OpMode {
         }
 
         if (driverGamepad.wasJustPressed(GamepadKeys.Button.B)) {
-            claw.toggle();
+            robot.clawSubsystem.toggle();
         }
 
         robot.drive.setWeightedDrivePower(drivePowers);
@@ -193,7 +194,8 @@ public class telopboth  extends OpMode {
         telemetry.addData("locked heading", lockHeading);
         telemetry.addData("target heading", targetHeading);
         telemetry.addData("heading deviation", Math.toDegrees(headingDeviation));
-        telemetry.addData("claw state", claw.getState());
+        telemetry.addData("claw state", robot.clawSubsystem.getState());
+        telemetry.addData("claw period", robot.clawSubsystem.period);
         telemetry.update();
         CommandScheduler.getInstance().run();
     }

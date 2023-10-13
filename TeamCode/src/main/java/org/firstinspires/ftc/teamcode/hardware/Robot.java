@@ -13,6 +13,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.subsystems.Claw;
 
 public class Robot {
     public enum ControlType {
@@ -25,13 +26,14 @@ public class Robot {
     public NavxMicroNavigationSensor navxMicro;
     public ElapsedTime timer = new ElapsedTime();
     public ControlType controls;
-    public Servo claw;
+    public Servo clawServo;
+    public Claw clawSubsystem;
 
     public Robot(HardwareMap hardwareMap) {
         //Define hardware map items first
         imu = hardwareMap.get(IMU.class, "imu");
         navxMicro = hardwareMap.get(NavxMicroNavigationSensor.class, "navx");
-        claw = hardwareMap.get(Servo.class, "claw");
+        clawServo = hardwareMap.get(Servo.class, "claw");
 
         IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
                 RevHubOrientationOnRobot.LogoFacingDirection.UP,
@@ -44,7 +46,9 @@ public class Robot {
         drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         controls = ControlType.FIELDCENTRIC;
 
+        clawSubsystem = new Claw(clawServo);
 
         CommandScheduler.getInstance().reset();
+        CommandScheduler.getInstance().registerSubsystem(clawSubsystem);
     }
 }
