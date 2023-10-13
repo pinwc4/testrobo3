@@ -9,6 +9,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AngularVelocity;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 import org.firstinspires.ftc.teamcode.hardware.Robot;
@@ -27,7 +28,20 @@ public class autotest4red extends OpMode {
     @Override
     public void init() {
         robot = new Robot(hardwareMap);
-        startPose = new Pose2d(-63, -40, Math.toRadians(0));
+
+    }
+
+
+    @Override
+    public void init_loop() {
+        double rightDistance = robot.rightDistance.getDistance(DistanceUnit.INCH);
+        telemetry.addData("right distance", rightDistance);
+        double yPose = -40;
+        if (rightDistance < 40 || rightDistance > 20){
+            yPose = -65 + rightDistance;
+        }
+
+        startPose = new Pose2d(-63, yPose, Math.toRadians(0));
 
         fastModeVel = new MecanumVelocityConstraint(70, DriveConstants.TRACK_WIDTH);
 
@@ -44,12 +58,6 @@ public class autotest4red extends OpMode {
                 .build();
     }
 
-    /*
-    @Override
-    public void init_loop() {
-
-    }
-    */
 
     @Override
     public void start() {
