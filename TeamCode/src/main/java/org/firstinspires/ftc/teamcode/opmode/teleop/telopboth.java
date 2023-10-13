@@ -63,7 +63,7 @@ public class telopboth  extends OpMode {
     //After init is complete this method runs repeatably after init until the play button is pressed
     @Override
     public void init_loop() {
-        rightDistance = robot.rightDistance.getDistance(DistanceUnit.INCH);
+        //rightDistance = robot.rightDistance.getDistance(DistanceUnit.INCH);
         telemetry.addData("right distance", rightDistance);
     }
 

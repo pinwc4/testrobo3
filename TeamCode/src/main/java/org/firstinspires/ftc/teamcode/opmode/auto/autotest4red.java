@@ -9,6 +9,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AngularVelocity;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 import org.firstinspires.ftc.teamcode.hardware.Robot;
@@ -23,14 +24,24 @@ public class autotest4red extends OpMode {
     public MecanumVelocityConstraint fastModeVel;
     public TrajectorySequence hometoboard;
     public TrajectorySequence boardtosomewhere;
+    private double rightDistance = 0;
 
     @Override
     public void init() {
         robot = new Robot(hardwareMap);
-        startPose = new Pose2d(-63, -40, Math.toRadians(0));
 
         fastModeVel = new MecanumVelocityConstraint(70, DriveConstants.TRACK_WIDTH);
 
+        //rightDistance = robot.rightDistance.getDistance(DistanceUnit.INCH);
+
+/*
+        double yPose = -65 + rightDistance;
+        if (yPose > -20 || yPose < -50) {
+            yPose = -40;
+        }
+*/
+        //double yPose = -40;
+        startPose = new Pose2d(-63, -40, Math.toRadians(0));
 
         hometoboard = robot.drive.trajectorySequenceBuilder(startPose)
                 .setVelConstraint(fastModeVel)
@@ -42,17 +53,21 @@ public class autotest4red extends OpMode {
         boardtosomewhere = robot.drive.trajectorySequenceBuilder(hometoboard.end())
                 .lineToConstantHeading(new Vector2d(58, 20))
                 .build();
+
     }
 
-    /*
+
     @Override
     public void init_loop() {
+        telemetry.addData("right distance", rightDistance);
+
 
     }
-    */
+
 
     @Override
     public void start() {
+
         robot.drive.setPoseEstimate(startPose);
         robot.drive.followTrajectorySequence(hometoboard);
         robot.drive.update();

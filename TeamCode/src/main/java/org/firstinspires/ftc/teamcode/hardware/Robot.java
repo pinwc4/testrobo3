@@ -29,7 +29,7 @@ public class Robot {
     public ControlType controls;
     public Servo clawServo;
     public Claw clawSubsystem;
-    public DistanceSensor rightDistance;
+    //public DistanceSensor rightDistance;
 
     public Robot(HardwareMap hardwareMap) {
         //Define hardware map items first
@@ -50,7 +50,7 @@ public class Robot {
 
         clawSubsystem = new Claw(clawServo);
 
-        rightDistance = hardwareMap.get(DistanceSensor.class, "rightDistance");
+        //rightDistance = hardwareMap.get(DistanceSensor.class, "rightDistance");
 
         CommandScheduler.getInstance().reset();
         CommandScheduler.getInstance().registerSubsystem(clawSubsystem);
