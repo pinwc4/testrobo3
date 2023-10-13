@@ -17,6 +17,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 import org.firstinspires.ftc.teamcode.commands.ClawCommand;
@@ -39,6 +40,7 @@ public class telopboth  extends OpMode {
     private double targetHeading = 90;
     private double headingDeviation = 0;
     private Button clawButton;
+    private double rightDistance = 0;
 
 
     //This method runs once when the init button is pressed on the driver hub
@@ -59,12 +61,11 @@ public class telopboth  extends OpMode {
     }
 
     //After init is complete this method runs repeatably after init until the play button is pressed
-    /*
     @Override
     public void init_loop() {
-
+        rightDistance = robot.rightDistance.getDistance(DistanceUnit.INCH);
+        telemetry.addData("right distance", rightDistance);
     }
-    */
 
     //This method runs once after the start button is pressed
     @Override
@@ -80,6 +81,7 @@ public class telopboth  extends OpMode {
         driverGamepad.readButtons();
         lockHeadingReader.readValue();
         lockHeading = lockHeadingReader.getState();
+
 
         Orientation angles = robot.navxgyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
         YawPitchRollAngles orientation = robot.imu.getRobotYawPitchRollAngles();

@@ -5,6 +5,7 @@ import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.qualcomm.hardware.kauailabs.NavxMicroNavigationSensor;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IMU;
@@ -28,6 +29,7 @@ public class Robot {
     public ControlType controls;
     public Servo clawServo;
     public Claw clawSubsystem;
+    public DistanceSensor rightDistance;
 
     public Robot(HardwareMap hardwareMap) {
         //Define hardware map items first
@@ -47,6 +49,8 @@ public class Robot {
         controls = ControlType.FIELDCENTRIC;
 
         clawSubsystem = new Claw(clawServo);
+
+        rightDistance = hardwareMap.get(DistanceSensor.class, "rightDistance");
 
         CommandScheduler.getInstance().reset();
         CommandScheduler.getInstance().registerSubsystem(clawSubsystem);
