@@ -34,7 +34,7 @@ public class autotest4red extends OpMode {
 
     @Override
     public void init_loop() {
-        double rightDistance = robot.rightDistance.getDistance(DistanceUnit.INCH);
+        double rightDistance = robot.rightDistanceSensor.getDistance(DistanceUnit.INCH);
         telemetry.addData("right distance", rightDistance);
         double yPose = -40;
         if (rightDistance < 40 || rightDistance > 20){

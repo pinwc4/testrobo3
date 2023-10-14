@@ -28,7 +28,7 @@ import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.subsystems.Claw;
 
 
-@TeleOp(name="Claw Opmode")
+@TeleOp(name="Threaded Opmode")
 public class telopboth  extends OpMode {
     private Robot robot;
     private GamepadEx driverGamepad;
@@ -48,6 +48,7 @@ public class telopboth  extends OpMode {
     @Override
     public void init() {
         robot = new Robot(hardwareMap);
+        robot.startI2CThread();
 
         driverGamepad = new GamepadEx(gamepad1);
 
@@ -64,8 +65,7 @@ public class telopboth  extends OpMode {
     //After init is complete this method runs repeatably after init until the play button is pressed
     @Override
     public void init_loop() {
-        rightDistance = robot.rightDistance.getDistance(DistanceUnit.INCH);
-        telemetry.addData("right distance", rightDistance);
+        telemetry.addData("right distance", robot.rightDistance);
     }
 
     //This method runs once after the start button is pressed
@@ -84,15 +84,12 @@ public class telopboth  extends OpMode {
         lockHeading = lockHeadingReader.getState();
 
 
-        Orientation angles = robot.navxgyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-        YawPitchRollAngles orientation = robot.imu.getRobotYawPitchRollAngles();
-
         Pose2d poseEstimate = robot.drive.getPoseEstimate();
         //Can get current heading from 3 different sensors
         //Odometry pods, built in imu, or external navx gyro
         //currentHeading = poseEstimate.getHeading();
         //currentHeading = robot.imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
-        currentHeading = Math.toRadians(angles.firstAngle);
+        currentHeading = Math.toRadians(robot.navxHeading);
 
         double gamely = driverGamepad.getLeftY();
         double gamelx = driverGamepad.getLeftX();
@@ -203,11 +200,11 @@ public class telopboth  extends OpMode {
     }
 
     //This runs when the stop button is pressed on the driver hub
-    /*
+
     @Override
     public void stop() {
-
+        robot.stopThread = true;
     }
-    */
+
 
 }

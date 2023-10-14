@@ -14,6 +14,12 @@ import com.qualcomm.robotcore.hardware.IntegratingGyroscope;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.subsystems.Claw;
 
@@ -30,8 +36,18 @@ public class Robot {
     public ControlType controls;
     public Servo clawServo;
     public Claw clawSubsystem;
-    public DistanceSensor rightDistance;
+    public DistanceSensor rightDistanceSensor;
     public HuskyLens huskyLens;
+    private Thread i2cThread;
+    private final Object i2cLock = new Object();
+    public Boolean stopThread = true;
+    public double rightDistance;
+    public HuskyLens.Block[] huskyBlocks;
+    public Orientation navxAngles;
+    public double navxHeading;
+    public double imuHeading;
+
+
 
     public Robot(HardwareMap hardwareMap) {
         //Define hardware map items first
@@ -52,7 +68,7 @@ public class Robot {
 
         clawSubsystem = new Claw(clawServo);
 
-        rightDistance = hardwareMap.get(DistanceSensor.class, "rightDistance");
+        rightDistanceSensor = hardwareMap.get(DistanceSensor.class, "rightDistance");
 
         huskyLens = hardwareMap.get(HuskyLens.class, "huskyLens");
         huskyLens.selectAlgorithm(HuskyLens.Algorithm.TAG_RECOGNITION);
@@ -60,4 +76,27 @@ public class Robot {
         CommandScheduler.getInstance().reset();
         CommandScheduler.getInstance().registerSubsystem(clawSubsystem);
     }
+
+    public void startI2CThread(){
+        i2cThread = new Thread(() -> {
+            double t_rightDistance = 0;
+            HuskyLens.Block[] t_blocks;
+            Orientation t_navxAngles;
+            double t_imuHeading;
+            while (!stopThread) {
+                t_rightDistance = rightDistanceSensor.getDistance(DistanceUnit.INCH);
+                t_blocks = huskyLens.blocks();
+                t_navxAngles = navxgyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+                t_imuHeading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
+                synchronized (i2cLock){
+                    rightDistance = t_rightDistance;
+                    huskyBlocks = t_blocks;
+                    navxHeading = t_navxAngles.firstAngle;
+                    imuHeading = t_imuHeading;
+                }
+            }
+        });
+        i2cThread.start();
+    }
+
 }
