@@ -25,7 +25,7 @@ import org.firstinspires.ftc.teamcode.roadrunner.drive.DriveConstants;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.subsystems.Claw;
 
-
+@Photon
 @TeleOp(name="Claw Opmode")
 public class telopboth  extends OpMode {
     private Robot robot;
