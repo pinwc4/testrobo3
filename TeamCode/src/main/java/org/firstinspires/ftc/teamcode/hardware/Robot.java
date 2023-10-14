@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.hardware;
 
+import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
+
 import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.qualcomm.hardware.dfrobot.HuskyLens;
@@ -40,14 +42,12 @@ public class Robot {
     public HuskyLens huskyLens;
     private Thread i2cThread;
     private final Object i2cLock = new Object();
-    public Boolean stopThread = true;
+    public Boolean stopThread = false;
     public double rightDistance;
     public HuskyLens.Block[] huskyBlocks;
     public Orientation navxAngles;
     public double navxHeading;
     public double imuHeading;
-
-
 
     public Robot(HardwareMap hardwareMap) {
         //Define hardware map items first
