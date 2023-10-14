@@ -40,7 +40,7 @@ public class Robot {
     public HuskyLens huskyLens;
     private Thread i2cThread;
     private final Object i2cLock = new Object();
-    public Boolean stopThread = true;
+    public Boolean stopThread = false;
     public double rightDistance;
     public HuskyLens.Block[] huskyBlocks;
     public Orientation navxAngles;
