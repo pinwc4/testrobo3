@@ -24,6 +24,8 @@ public class Claw extends SubsystemBase {
     public Period period;
     private Servo clawServo;
 
+    private double openPostion = 0.5;
+
 
     public Claw(Servo t_servo) {
         clawServo = t_servo;
@@ -31,8 +33,8 @@ public class Claw extends SubsystemBase {
     }
 
     public void open() {
-        clawServo.setPosition(0.5);
-        position = 0.5;
+        clawServo.setPosition(openPostion);
+        position = openPostion;
         clawState = State.OPEN;
     }
 
