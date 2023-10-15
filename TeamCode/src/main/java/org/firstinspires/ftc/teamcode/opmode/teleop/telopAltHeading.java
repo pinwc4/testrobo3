@@ -18,9 +18,12 @@ import org.firstinspires.ftc.teamcode.hardware.Robot;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.DriveConstants;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
 
-
 @TeleOp(name="Alt Heading Opmode")
 public class telopAltHeading extends OpMode {
+    public enum Alliance {
+        BLUE,
+        RED
+    }
     private Robot robot;
     private GamepadEx driverGamepad;
     private Pose2d drivePowers;
@@ -33,7 +36,7 @@ public class telopAltHeading extends OpMode {
     private double headingDeviation = 0;
     private Button clawButton;
     private double rightDistance = 0;
-
+    public Alliance alliance = Alliance.BLUE;
 
     //This method runs once when the init button is pressed on the driver hub
     @Override
@@ -183,6 +186,7 @@ public class telopAltHeading extends OpMode {
         telemetry.addData("target heading", targetHeading);
         telemetry.addData("heading deviation", Math.toDegrees(headingDeviation));
         telemetry.addData("claw state", robot.clawSubsystem.getState());
+        telemetry.addData("alliance", alliance);
         //for (int i = 0; i < blocks.length; i++) {
         //    telemetry.addData("Block", blocks[i].toString());
         //}
