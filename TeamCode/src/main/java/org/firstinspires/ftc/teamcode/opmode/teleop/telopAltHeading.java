@@ -110,7 +110,7 @@ public class telopAltHeading extends OpMode {
             if (lockHeading) {
                 //Ignore gamepad input if it is tiny to avoid noise accumulating
                 if (gamerx > 0.05 || gamerx < -0.05) {
-                    targetHeading = currentHeading + (-(gamerx * Math.abs(gamerx)) * 10);
+                    targetHeading = Math.toDegrees(currentHeading) + (-(gamerx * Math.abs(gamerx)) * 100);
 
                     if (targetHeading > 180) {
                         targetHeading = targetHeading - 360;
