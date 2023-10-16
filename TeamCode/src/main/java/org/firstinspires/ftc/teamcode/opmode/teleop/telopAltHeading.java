@@ -20,11 +20,8 @@ import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
 
 @TeleOp(name="Alt Heading Opmode")
 public class telopAltHeading extends OpMode {
-    public enum Alliance {
-        BLUE,
-        RED
-    }
-    private Robot robot;
+
+    public Robot robot;
     private GamepadEx driverGamepad;
     private Pose2d drivePowers;
     private ToggleButtonReader lockHeadingReader;
@@ -36,7 +33,7 @@ public class telopAltHeading extends OpMode {
     private double headingDeviation = 0;
     private Button clawButton;
     private double rightDistance = 0;
-    public Alliance alliance = Alliance.BLUE;
+    private double wingAngle = -45;
 
     //This method runs once when the init button is pressed on the driver hub
     @Override
@@ -67,6 +64,9 @@ public class telopAltHeading extends OpMode {
     public void start() {
         robot.imu.resetYaw();
         robot.timer.reset();
+        if (robot.alliance == Robot.Alliance.RED) {
+            wingAngle = -135;
+        }
     }
 
     //After start is complete this method runs repeatably after the start button is pressed
@@ -157,7 +157,7 @@ public class telopAltHeading extends OpMode {
         }
 
         if (driverGamepad.wasJustPressed(GamepadKeys.Button.DPAD_RIGHT)|| driverGamepad.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)) {
-            targetHeading = -135.0;
+            targetHeading = wingAngle;
         }
 
         if (driverGamepad.wasJustPressed(GamepadKeys.Button.Y) && driverGamepad.getButton(GamepadKeys.Button.DPAD_UP)) {
@@ -186,7 +186,7 @@ public class telopAltHeading extends OpMode {
         telemetry.addData("target heading", targetHeading);
         telemetry.addData("heading deviation", Math.toDegrees(headingDeviation));
         telemetry.addData("claw state", robot.clawSubsystem.getState());
-        telemetry.addData("alliance", alliance);
+        telemetry.addData("alliance", robot.alliance);
         //for (int i = 0; i < blocks.length; i++) {
         //    telemetry.addData("Block", blocks[i].toString());
         //}
