@@ -29,12 +29,14 @@ public class telopAltHeading extends OpMode {
     private PIDFController headingController;
     private double currentHeading;
     private double turnAngle;
-    private double targetHeading = 90;
+    private double targetHeading = 0;
     private double headingDeviation = 0;
     private Button clawButton;
     private double rightDistance = 0;
     private double wingAngle = -45;
     private double headingOutput = 0;
+    private double headingDelayMS = 200;
+    private double targetHeadingTime = 0;
 
     //This method runs once when the init button is pressed on the driver hub
     @Override
@@ -50,6 +52,7 @@ public class telopAltHeading extends OpMode {
         drivePowers = new Pose2d();
         lockHeadingReader = new ToggleButtonReader(driverGamepad, GamepadKeys.Button.X);
         headingController = new PIDFController(SampleMecanumDrive.HEADING_PID);
+        headingController.setTargetPosition(0);
         turnAngle = 0;
         robot.controls = Robot.ControlType.FIELDCENTRIC;
 
@@ -74,7 +77,7 @@ public class telopAltHeading extends OpMode {
     //After start is complete this method runs repeatably after the start button is pressed
     @Override
     public void loop() {
-        double starttime = robot.timer.milliseconds();
+        double startTime = robot.timer.milliseconds();
         driverGamepad.readButtons();
         lockHeadingReader.readValue();
         lockHeading = lockHeadingReader.getState();
@@ -104,6 +107,7 @@ public class telopAltHeading extends OpMode {
             robot.imu.resetYaw();
             robot.navxMicro.initialize();
             robot.drive.setPoseEstimate(new Pose2d(0, 0, Math.toRadians(0)));
+            targetHeading = 0;
         }
 
         if (driverGamepad.wasJustPressed(GamepadKeys.Button.B)) {
@@ -121,6 +125,10 @@ public class telopAltHeading extends OpMode {
             targetHeading = Math.toDegrees(currentHeading);
             //Manually rotate output based on gamepad right stick
             headingOutput = -(gamerx * Math.abs(gamerx));
+            targetHeadingTime = startTime;
+        } else if ((startTime - targetHeadingTime) < headingDelayMS) {
+            targetHeading = Math.toDegrees(currentHeading);
+            headingOutput = -(gamerx * Math.abs(gamerx));
         } else {
             //Calculate the difference between our current heading and target
             //This is used with the PID so that we do not have to deal with angle wrap
@@ -131,7 +139,7 @@ public class telopAltHeading extends OpMode {
             //headingDeviation = angleWrap(Math.toRadians(headingDeviation));
             headingDeviation = Angle.normDelta(Math.toRadians(headingDeviation));
 
-            headingController.setTargetPosition(0);
+            //headingController.setTargetPosition(0);
             headingOutput = (headingController.update(headingDeviation) * DriveConstants.kV) * DriveConstants.TRACK_WIDTH;
         }
         drivePowers = new Pose2d(input, headingOutput);
@@ -142,7 +150,7 @@ public class telopAltHeading extends OpMode {
 
         //HuskyLens.Block[] blocks = robot.huskyLens.blocks();
 
-        double elapsedtime = robot.timer.milliseconds() - starttime;
+        double elapsedtime = robot.timer.milliseconds() - startTime;
         // Print pose to telemetry
         telemetry.addData("loop ms", elapsedtime);
         telemetry.addData("mode", robot.controls);
@@ -154,6 +162,7 @@ public class telopAltHeading extends OpMode {
         telemetry.addData("heading deviation", Math.toDegrees(headingDeviation));
         telemetry.addData("claw state", robot.clawSubsystem.getState());
         telemetry.addData("alliance", robot.alliance);
+        telemetry.addData("right distance", robot.rightDistance);
         //for (int i = 0; i < blocks.length; i++) {
         //    telemetry.addData("Block", blocks[i].toString());
         //}
