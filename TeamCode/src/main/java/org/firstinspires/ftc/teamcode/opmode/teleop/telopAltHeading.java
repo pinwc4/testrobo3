@@ -34,6 +34,7 @@ public class telopAltHeading extends OpMode {
     private Button clawButton;
     private double rightDistance = 0;
     private double wingAngle = -45;
+    private double headingOutput = 0;
 
     //This method runs once when the init button is pressed on the driver hub
     @Override
@@ -50,6 +51,7 @@ public class telopAltHeading extends OpMode {
         lockHeadingReader = new ToggleButtonReader(driverGamepad, GamepadKeys.Button.X);
         headingController = new PIDFController(SampleMecanumDrive.HEADING_PID);
         turnAngle = 0;
+        robot.controls = Robot.ControlType.FIELDCENTRIC;
 
     }
 
@@ -89,68 +91,6 @@ public class telopAltHeading extends OpMode {
         double gamelx = driverGamepad.getLeftX();
         double gamerx = driverGamepad.getRightX();
 
-        //Check to see if we should change control type
-        if (driverGamepad.wasJustPressed(GamepadKeys.Button.Y)) {
-            if (robot.controls == Robot.ControlType.FIELDCENTRIC) {
-                robot.controls = Robot.ControlType.ROBOTCENTRIC;
-            } else {
-                robot.controls = Robot.ControlType.FIELDCENTRIC;
-            }
-        }
-
-        if (robot.controls == Robot.ControlType.FIELDCENTRIC) {
-            // Create a vector from the gamepad x/y inputs
-            // Then, rotate that vector by the inverse of that heading
-            Vector2d input = new Vector2d(
-                    (gamely * Math.abs(gamely)),
-                    -(gamelx * Math.abs(gamelx))
-            ).rotated(-currentHeading);
-
-            //Check to see if we are locking our heading
-            if (lockHeading) {
-                //Ignore gamepad input if it is tiny to avoid noise accumulating
-                if (gamerx > 0.05 || gamerx < -0.05) {
-                    targetHeading = Math.toDegrees(currentHeading) + (-(gamerx * Math.abs(gamerx)) * 100);
-
-                    if (targetHeading > 180) {
-                        targetHeading = targetHeading - 360;
-                    } else if (targetHeading < -180) {
-                        targetHeading = targetHeading + 360;
-                    }
-
-
-                    //targetHeading = Math.toDegrees(angleWrap(Math.toRadians(targetHeading)));
-                }
-
-                //Calculate the differenc between our current heading and target
-                //This is used with the PID so that we do not have to deal with angle wrap
-                //The pid target is 0 degrees and we just give it how far off we are
-                headingDeviation = Math.toDegrees(currentHeading) - targetHeading;
-
-                //Still have to angle wrap our deviation because it can end up being greater
-                //Than 180 degrees and try to go the wrong direction
-                //headingDeviation = angleWrap(Math.toRadians(headingDeviation));
-                headingDeviation = Angle.normDelta(Math.toRadians(headingDeviation));
-
-                headingController.setTargetPosition(0);
-                double headingInput = (headingController.update(headingDeviation) * DriveConstants.kV) * DriveConstants.TRACK_WIDTH;
-
-                //Do not do this, it does not handle angle wrap properly
-                //headingController.setTargetPosition(Math.toRadians(targetHeading));
-                //double headingInput = (headingController.update(currentHeading) * DriveConstants.kV) * DriveConstants.TRACK_WIDTH;
-
-                drivePowers = new Pose2d(input, headingInput);
-            } else {
-                // Pass in the rotated input + right stick value for rotation
-                // Rotation is not part of the rotated input thus must be passed in separately
-                drivePowers = new Pose2d(input.getX(), input.getY(), -(gamerx * Math.abs(gamerx)));
-            }
-
-        } else {
-            //Robot Centric driving
-            drivePowers = new Pose2d((gamely * Math.abs(gamely)), -(gamelx * Math.abs(gamelx)), -(gamerx * Math.abs(gamerx)));
-
-        }
 
         if (driverGamepad.wasJustPressed(GamepadKeys.Button.DPAD_LEFT) || driverGamepad.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER)) {
             targetHeading = 90.0;
@@ -169,6 +109,33 @@ public class telopAltHeading extends OpMode {
         if (driverGamepad.wasJustPressed(GamepadKeys.Button.B)) {
             robot.clawSubsystem.toggle();
         }
+
+        // Create a vector from the gamepad x/y inputs
+        // Then, rotate that vector by the inverse of that heading
+        Vector2d input = new Vector2d(
+            (gamely * Math.abs(gamely)),
+            -(gamelx * Math.abs(gamelx))
+        ).rotated(-currentHeading);
+
+        if (gamerx > 0.05 || gamerx < -0.05) {
+            targetHeading = Math.toDegrees(currentHeading);
+            //Manually rotate output based on gamepad right stick
+            headingOutput = -(gamerx * Math.abs(gamerx));
+        } else {
+            //Calculate the difference between our current heading and target
+            //This is used with the PID so that we do not have to deal with angle wrap
+            //The pid target is 0 degrees and we just give it how far off we are
+            headingDeviation = Math.toDegrees(currentHeading) - targetHeading;
+            //Still have to angle wrap our deviation because it can end up being greater
+            //Than 180 degrees and try to go the wrong direction
+            //headingDeviation = angleWrap(Math.toRadians(headingDeviation));
+            headingDeviation = Angle.normDelta(Math.toRadians(headingDeviation));
+
+            headingController.setTargetPosition(0);
+            headingOutput = (headingController.update(headingDeviation) * DriveConstants.kV) * DriveConstants.TRACK_WIDTH;
+        }
+        drivePowers = new Pose2d(input, headingOutput);
+
 
         robot.drive.setWeightedDrivePower(drivePowers);
         robot.drive.update();
