@@ -7,6 +7,9 @@ import org.firstinspires.ftc.teamcode.hardware.Robot;
 
 public class Claw extends SubsystemBase {
 
+    final double openPosition = 0.5;
+    final double closedPosition = 0;
+
     enum State {
         OPEN,
         CLOSED
@@ -17,7 +20,6 @@ public class Claw extends SubsystemBase {
         RUNNING
     }
 
-    //private Robot robotBase;
     public double position;
 
     public State clawState;
@@ -31,14 +33,14 @@ public class Claw extends SubsystemBase {
     }
 
     public void open() {
-        clawServo.setPosition(0.5);
-        position = 0.5;
+        clawServo.setPosition(openPosition);
+        position = openPosition;
         clawState = State.OPEN;
     }
 
     public void close() {
-        clawServo.setPosition(0);
-        position = 0;
+        clawServo.setPosition(closedPosition);
+        position = closedPosition;
         clawState = State.CLOSED;
     }
 
