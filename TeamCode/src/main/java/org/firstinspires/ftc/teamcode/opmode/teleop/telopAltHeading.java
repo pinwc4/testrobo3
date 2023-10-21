@@ -20,11 +20,8 @@ import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
 
 @TeleOp(name="Alt Heading Opmode")
 public class telopAltHeading extends OpMode {
-    public enum Alliance {
-        BLUE,
-        RED
-    }
-    private Robot robot;
+
+    public Robot robot;
     private GamepadEx driverGamepad;
     private Pose2d drivePowers;
     private ToggleButtonReader lockHeadingReader;
@@ -32,11 +29,14 @@ public class telopAltHeading extends OpMode {
     private PIDFController headingController;
     private double currentHeading;
     private double turnAngle;
-    private double targetHeading = 90;
+    private double targetHeading = 0;
     private double headingDeviation = 0;
     private Button clawButton;
     private double rightDistance = 0;
-    public Alliance alliance = Alliance.BLUE;
+    private double wingAngle = -45;
+    private double headingOutput = 0;
+    private double headingDelayMS = 200;
+    private double targetHeadingTime = 0;
 
     //This method runs once when the init button is pressed on the driver hub
     @Override
@@ -52,7 +52,9 @@ public class telopAltHeading extends OpMode {
         drivePowers = new Pose2d();
         lockHeadingReader = new ToggleButtonReader(driverGamepad, GamepadKeys.Button.X);
         headingController = new PIDFController(SampleMecanumDrive.HEADING_PID);
+        headingController.setTargetPosition(0);
         turnAngle = 0;
+        robot.controls = Robot.ControlType.FIELDCENTRIC;
 
     }
 
@@ -67,12 +69,15 @@ public class telopAltHeading extends OpMode {
     public void start() {
         robot.imu.resetYaw();
         robot.timer.reset();
+        if (robot.alliance == Robot.Alliance.RED) {
+            wingAngle = -135;
+        }
     }
 
     //After start is complete this method runs repeatably after the start button is pressed
     @Override
     public void loop() {
-        double starttime = robot.timer.milliseconds();
+        double startTime = robot.timer.milliseconds();
         driverGamepad.readButtons();
         lockHeadingReader.readValue();
         lockHeading = lockHeadingReader.getState();
@@ -89,93 +94,63 @@ public class telopAltHeading extends OpMode {
         double gamelx = driverGamepad.getLeftX();
         double gamerx = driverGamepad.getRightX();
 
-        //Check to see if we should change control type
-        if (driverGamepad.wasJustPressed(GamepadKeys.Button.Y)) {
-            if (robot.controls == Robot.ControlType.FIELDCENTRIC) {
-                robot.controls = Robot.ControlType.ROBOTCENTRIC;
-            } else {
-                robot.controls = Robot.ControlType.FIELDCENTRIC;
-            }
-        }
-
-        if (robot.controls == Robot.ControlType.FIELDCENTRIC) {
-            // Create a vector from the gamepad x/y inputs
-            // Then, rotate that vector by the inverse of that heading
-            Vector2d input = new Vector2d(
-                    (gamely * Math.abs(gamely)),
-                    -(gamelx * Math.abs(gamelx))
-            ).rotated(-currentHeading);
-
-            //Check to see if we are locking our heading
-            if (lockHeading) {
-                //Ignore gamepad input if it is tiny to avoid noise accumulating
-                if (gamerx > 0.05 || gamerx < -0.05) {
-                    targetHeading = currentHeading + (-(gamerx * Math.abs(gamerx)) * 10);
-
-                    if (targetHeading > 180) {
-                        targetHeading = targetHeading - 360;
-                    } else if (targetHeading < -180) {
-                        targetHeading = targetHeading + 360;
-                    }
-
-
-                    //targetHeading = Math.toDegrees(angleWrap(Math.toRadians(targetHeading)));
-                }
-
-                //Calculate the differenc between our current heading and target
-                //This is used with the PID so that we do not have to deal with angle wrap
-                //The pid target is 0 degrees and we just give it how far off we are
-                headingDeviation = Math.toDegrees(currentHeading) - targetHeading;
-
-                //Still have to angle wrap our deviation because it can end up being greater
-                //Than 180 degrees and try to go the wrong direction
-                //headingDeviation = angleWrap(Math.toRadians(headingDeviation));
-                headingDeviation = Angle.normDelta(Math.toRadians(headingDeviation));
-
-                headingController.setTargetPosition(0);
-                double headingInput = (headingController.update(headingDeviation) * DriveConstants.kV) * DriveConstants.TRACK_WIDTH;
-
-                //Do not do this, it does not handle angle wrap properly
-                //headingController.setTargetPosition(Math.toRadians(targetHeading));
-                //double headingInput = (headingController.update(currentHeading) * DriveConstants.kV) * DriveConstants.TRACK_WIDTH;
-
-                drivePowers = new Pose2d(input, headingInput);
-            } else {
-                // Pass in the rotated input + right stick value for rotation
-                // Rotation is not part of the rotated input thus must be passed in separately
-                drivePowers = new Pose2d(input.getX(), input.getY(), -(gamerx * Math.abs(gamerx)));
-            }
-
-        } else {
-            //Robot Centric driving
-            drivePowers = new Pose2d((gamely * Math.abs(gamely)), -(gamelx * Math.abs(gamelx)), -(gamerx * Math.abs(gamerx)));
-
-        }
 
         if (driverGamepad.wasJustPressed(GamepadKeys.Button.DPAD_LEFT) || driverGamepad.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER)) {
             targetHeading = 90.0;
         }
 
         if (driverGamepad.wasJustPressed(GamepadKeys.Button.DPAD_RIGHT)|| driverGamepad.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)) {
-            targetHeading = -135.0;
+            targetHeading = wingAngle;
         }
 
         if (driverGamepad.wasJustPressed(GamepadKeys.Button.Y) && driverGamepad.getButton(GamepadKeys.Button.DPAD_UP)) {
             robot.imu.resetYaw();
             robot.navxMicro.initialize();
             robot.drive.setPoseEstimate(new Pose2d(0, 0, Math.toRadians(0)));
+            targetHeading = 0;
         }
 
         if (driverGamepad.wasJustPressed(GamepadKeys.Button.B)) {
             robot.clawSubsystem.toggle();
         }
 
+        // Create a vector from the gamepad x/y inputs
+        // Then, rotate that vector by the inverse of that heading
+        Vector2d input = new Vector2d(
+            (gamely * Math.abs(gamely)),
+            -(gamelx * Math.abs(gamelx))
+        ).rotated(-currentHeading);
+
+        if (gamerx > 0.05 || gamerx < -0.05) {
+            targetHeading = Math.toDegrees(currentHeading);
+            //Manually rotate output based on gamepad right stick
+            headingOutput = -(gamerx * Math.abs(gamerx));
+            targetHeadingTime = startTime;
+        } else if ((startTime - targetHeadingTime) < headingDelayMS) {
+            targetHeading = Math.toDegrees(currentHeading);
+            headingOutput = -(gamerx * Math.abs(gamerx));
+        } else {
+            //Calculate the difference between our current heading and target
+            //This is used with the PID so that we do not have to deal with angle wrap
+            //The pid target is 0 degrees and we just give it how far off we are
+            headingDeviation = Math.toDegrees(currentHeading) - targetHeading;
+            //Still have to angle wrap our deviation because it can end up being greater
+            //Than 180 degrees and try to go the wrong direction
+            //headingDeviation = angleWrap(Math.toRadians(headingDeviation));
+            headingDeviation = Angle.normDelta(Math.toRadians(headingDeviation));
+
+            //headingController.setTargetPosition(0);
+            headingOutput = (headingController.update(headingDeviation) * DriveConstants.kV) * DriveConstants.TRACK_WIDTH;
+        }
+        drivePowers = new Pose2d(input, headingOutput);
+
+
         robot.drive.setWeightedDrivePower(drivePowers);
         robot.drive.update();
 
         //HuskyLens.Block[] blocks = robot.huskyLens.blocks();
 
-        double elapsedtime = robot.timer.milliseconds() - starttime;
+        double elapsedtime = robot.timer.milliseconds() - startTime;
         // Print pose to telemetry
         telemetry.addData("loop ms", elapsedtime);
         telemetry.addData("mode", robot.controls);
@@ -186,7 +161,8 @@ public class telopAltHeading extends OpMode {
         telemetry.addData("target heading", targetHeading);
         telemetry.addData("heading deviation", Math.toDegrees(headingDeviation));
         telemetry.addData("claw state", robot.clawSubsystem.getState());
-        telemetry.addData("alliance", alliance);
+        telemetry.addData("alliance", robot.alliance);
+        telemetry.addData("right distance", robot.rightDistance);
         //for (int i = 0; i < blocks.length; i++) {
         //    telemetry.addData("Block", blocks[i].toString());
         //}

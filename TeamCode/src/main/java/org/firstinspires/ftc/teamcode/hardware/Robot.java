@@ -20,6 +20,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
+import org.firstinspires.ftc.teamcode.opmode.teleop.telopAltHeading;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.subsystems.Claw;
 
@@ -27,6 +28,10 @@ public class Robot {
     public enum ControlType {
         FIELDCENTRIC,
         ROBOTCENTRIC
+    }
+    public enum Alliance {
+        BLUE,
+        RED
     }
     public SampleMecanumDrive drive;
     public IMU imu;
@@ -46,7 +51,7 @@ public class Robot {
     public Orientation navxAngles;
     public double navxHeading;
     public double imuHeading;
-
+    public Alliance alliance = Alliance.BLUE;
 
 
     public Robot(HardwareMap hardwareMap) {
