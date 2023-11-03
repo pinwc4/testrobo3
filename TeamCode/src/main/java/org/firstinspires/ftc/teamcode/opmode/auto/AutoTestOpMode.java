@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import org.firstinspires.ftc.teamcode.hardware.Robot;
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequence;
 
-@Autonomous(name = "Test 1 Red")
+@Autonomous(name = "Auto Test Traj Build")
 
 public class AutoTestOpMode extends OpMode {
     TrajectorySequence hometoboard;
