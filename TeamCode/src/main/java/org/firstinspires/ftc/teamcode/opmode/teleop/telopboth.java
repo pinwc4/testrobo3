@@ -66,6 +66,24 @@ public class telopboth  extends OpMode {
     public void init_loop() {
         rightDistance = robot.rightDistance.getDistance(DistanceUnit.INCH);
         telemetry.addData("right distance", rightDistance);
+
+        int blockXCoordinate;
+        int blockYCoordinate;
+        HuskyLens.Block[] blocks = robot.huskyLens.blocks();
+
+        for (int i = 0; i < blocks.length; i++) {
+            blockXCoordinate = blocks[i].x;
+            blockYCoordinate = blocks[i].y;
+            telemetry.addData("Block", blocks[i].toString());
+            telemetry.addData("Block X", blockXCoordinate);
+            telemetry.addData("Block Y", blockYCoordinate);
+            telemetry.addData("Block Top", blocks[i].top);
+            telemetry.addData("Block Left", blocks[i].left);
+            telemetry.addData("Block ID", blocks[i].id);
+            telemetry.addData("Block Height", blocks[i].height);
+            telemetry.addData("Block Width", blocks[i].width);
+        }
+
     }
 
     //This method runs once after the start button is pressed

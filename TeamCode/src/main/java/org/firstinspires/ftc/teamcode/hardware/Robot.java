@@ -55,7 +55,7 @@ public class Robot {
         rightDistance = hardwareMap.get(DistanceSensor.class, "rightDistance");
 
         huskyLens = hardwareMap.get(HuskyLens.class, "huskyLens");
-        huskyLens.selectAlgorithm(HuskyLens.Algorithm.TAG_RECOGNITION);
+        huskyLens.selectAlgorithm(HuskyLens.Algorithm.OBJECT_RECOGNITION);
 
         CommandScheduler.getInstance().reset();
         CommandScheduler.getInstance().registerSubsystem(clawSubsystem);
