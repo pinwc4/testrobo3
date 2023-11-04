@@ -13,6 +13,7 @@ import com.arcrobotics.ftclib.gamepad.ToggleButtonReader;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.commands.ClawCommand;
 import org.firstinspires.ftc.teamcode.hardware.Robot;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.DriveConstants;
@@ -160,6 +161,7 @@ public class telopAltHeading extends OpMode {
         telemetry.addData("locked heading", lockHeading);
         telemetry.addData("target heading", targetHeading);
         telemetry.addData("heading deviation", Math.toDegrees(headingDeviation));
+        telemetry.addData("builtin IMU",robot.imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES) );
         telemetry.addData("claw state", robot.clawSubsystem.getState());
         telemetry.addData("alliance", robot.alliance);
         telemetry.addData("right distance", robot.rightDistance);
