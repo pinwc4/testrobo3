@@ -5,11 +5,13 @@ import com.acmerobotics.roadrunner.util.Angle;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.control.PIDFController;
 import com.arcrobotics.ftclib.command.CommandScheduler;
+import com.arcrobotics.ftclib.command.InstantCommand;
 import com.arcrobotics.ftclib.command.button.Button;
 import com.arcrobotics.ftclib.command.button.GamepadButton;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.arcrobotics.ftclib.gamepad.ToggleButtonReader;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -18,6 +20,7 @@ import org.firstinspires.ftc.teamcode.hardware.Robot;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.DriveConstants;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
 
+@Disabled
 @TeleOp(name="Alt Heading Opmode")
 public class telopAltHeading extends OpMode {
 
@@ -48,6 +51,8 @@ public class telopAltHeading extends OpMode {
 
         clawButton = new GamepadButton(driverGamepad, GamepadKeys.Button.A);
         clawButton.whenPressed(new ClawCommand(robot));
+
+
 
         drivePowers = new Pose2d();
         lockHeadingReader = new ToggleButtonReader(driverGamepad, GamepadKeys.Button.X);
