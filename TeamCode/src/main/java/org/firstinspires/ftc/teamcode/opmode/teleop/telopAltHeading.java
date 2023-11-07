@@ -18,6 +18,7 @@ import org.firstinspires.ftc.teamcode.commands.ClawCommand;
 import org.firstinspires.ftc.teamcode.hardware.Robot;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.DriveConstants;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.subsystems.DataStorage;
 
 @TeleOp(name="Alt Heading Opmode")
 public class telopAltHeading extends OpMode {
@@ -89,7 +90,7 @@ public class telopAltHeading extends OpMode {
         //Odometry pods, built in imu, or external navx gyro
         //currentHeading = poseEstimate.getHeading();
         //currentHeading = robot.imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
-        currentHeading = Math.toRadians(robot.navxHeading);
+        currentHeading = Math.toRadians(robot.navxHeading + DataStorage.finalAutoHeading);
 
         double gamely = driverGamepad.getLeftY();
         double gamelx = driverGamepad.getLeftX();

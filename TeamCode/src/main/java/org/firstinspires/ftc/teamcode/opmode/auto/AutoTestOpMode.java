@@ -11,6 +11,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import org.firstinspires.ftc.teamcode.hardware.Robot;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.DriveConstants;
 import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequence;
+import org.firstinspires.ftc.teamcode.subsystems.DataStorage;
 
 @Autonomous(name = "Auto Test Traj Build")
 
@@ -115,4 +116,8 @@ public class AutoTestOpMode extends OpMode {
         telemetry.addData("clawPos", robot.clawServo.getPosition());
     }
 
+    @Override
+    public void stop() {
+        DataStorage.finalAutoHeading = robot.navxHeading;
+    }
 }
