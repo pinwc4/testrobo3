@@ -110,6 +110,7 @@ public class telopAltHeading extends OpMode {
             robot.navxMicro.initialize();
             robot.drive.setPoseEstimate(new Pose2d(0, 0, Math.toRadians(0)));
             targetHeading = 0;
+            DataStorage.finalAutoHeading = 0;
         }
 
         if (driverGamepad.wasJustPressed(GamepadKeys.Button.B)) {
@@ -141,6 +142,7 @@ public class telopAltHeading extends OpMode {
             //headingDeviation = angleWrap(Math.toRadians(headingDeviation));
             headingDeviation = Angle.normDelta(Math.toRadians(headingDeviation));
 
+
             //headingController.setTargetPosition(0);
             headingOutput = (headingController.update(headingDeviation) * DriveConstants.kV) * DriveConstants.TRACK_WIDTH;
         }
@@ -166,6 +168,7 @@ public class telopAltHeading extends OpMode {
         telemetry.addData("claw state", robot.clawSubsystem.getState());
         telemetry.addData("alliance", robot.alliance);
         telemetry.addData("right distance", robot.rightDistance);
+        telemetry.addData("heading offset", DataStorage.finalAutoHeading);
         //for (int i = 0; i < blocks.length; i++) {
         //    telemetry.addData("Block", blocks[i].toString());
         //}

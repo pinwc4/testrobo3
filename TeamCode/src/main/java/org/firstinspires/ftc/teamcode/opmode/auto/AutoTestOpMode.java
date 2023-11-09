@@ -28,6 +28,7 @@ public class AutoTestOpMode extends OpMode {
 
     @Override
     public void init() {
+        DataStorage.finalAutoHeading = 0;
         startPose = new Pose2d(-63, -40, Math.toRadians(0));
         robot = new Robot(hardwareMap);
         fastModeVel = new MecanumVelocityConstraint(70, DriveConstants.TRACK_WIDTH);
