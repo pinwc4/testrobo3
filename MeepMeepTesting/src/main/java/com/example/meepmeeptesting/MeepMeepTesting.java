@@ -47,26 +47,37 @@ public class MeepMeepTesting {
                         .turn(Math.toRadians(-90))
                         .build();
 
+        AddTrajectorySequenceCallback test2 = drive -> drive.trajectorySequenceBuilder(new Pose2d(-35.92, -71.83, Math.toRadians(90.00)))
+                .splineTo(new Vector2d(-35.92, -26.62), Math.toRadians(90.00))
+                .splineToLinearHeading(new Pose2d(-40.44, -37.00, Math.toRadians(0.00)), Math.toRadians(180.00))
+                .splineToSplineHeading(new Pose2d(18.17, -37.00, Math.toRadians(1.21)), Math.toRadians(1.21))
+                .build();
+
 
 
         AddTrajectorySequenceCallback[] trajArray = {blue2red, junk};
 
-
+/*
         RoadRunnerBotEntity myBot2 = new DefaultBotBuilder(meepMeep)
                 // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
                 .setConstraints(70, 70, Math.toRadians(180), Math.toRadians(180), 15)
                 .followTrajectorySequence(blue2red2);
+*/
+        RoadRunnerBotEntity myBot2 = new DefaultBotBuilder(meepMeep)
+                .setConstraints(70, 70, Math.toRadians(180), Math.toRadians(180), 15)
+                .followTrajectorySequence(test2);
 
-
+        /*
         Image img = null;
         try {
             img = ImageIO.read(new File("MeepMeepTesting/src/main/java/com/example/meepmeeptesting/centerstagerotated.png"));
         } catch (IOException e) {
         }
+         */
 
-        //meepMeep.setBackground(MeepMeep.Background.FIELD_CENTERSTAGE_JUICE_DARK)
-                //.setDarkMode(true)
-        meepMeep.setBackground(img)
+        meepMeep.setBackground(MeepMeep.Background.FIELD_CENTERSTAGE_JUICE_DARK)
+                .setDarkMode(true)
+        //meepMeep.setBackground(img)
                 .setBackgroundAlpha(0.95f)
                 .addEntity(myBot2)
                 .start();
