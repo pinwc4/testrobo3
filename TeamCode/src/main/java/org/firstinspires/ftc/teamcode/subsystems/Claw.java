@@ -52,6 +52,10 @@ public class Claw extends SubsystemBase {
         }
     }
 
+    public boolean isClosed() {
+        return true;
+    }
+
     public void periodic() {
         period = Period.RUNNING;
     }
