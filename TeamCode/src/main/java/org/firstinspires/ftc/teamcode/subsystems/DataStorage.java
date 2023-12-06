@@ -1,5 +1,5 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
 public class DataStorage {
-    public static double finalAutoHeading = 0;
+    public static double finalAutoHeading;
 }
