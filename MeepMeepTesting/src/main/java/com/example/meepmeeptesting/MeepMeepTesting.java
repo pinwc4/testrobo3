@@ -23,7 +23,7 @@ public class MeepMeepTesting {
 
 
     public static void main(String[] args) {
-        MeepMeep meepMeep = new MeepMeep(800);
+        MeepMeep meepMeep = new MeepMeep(1000);
 
         AddTrajectorySequenceCallback blue2red = drive ->
                 drive.trajectorySequenceBuilder(new Pose2d(-63.00, -40.00, Math.toRadians(0.00)))
