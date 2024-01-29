@@ -53,6 +53,32 @@ public class MeepMeepTesting {
                 .splineToSplineHeading(new Pose2d(18.17, -37.00, Math.toRadians(1.21)), Math.toRadians(1.21))
                 .build();
 
+        AddTrajectorySequenceCallback test3 = drive ->
+                drive.trajectorySequenceBuilder(new Pose2d(-38.35, 63.30, Math.toRadians(270.00)))
+                        .lineToLinearHeading(new Pose2d(-47.00, 30.00, Math.toRadians(250.00)))
+                        .setReversed(true)
+                        .waitSeconds(2)
+                        .splineToConstantHeading(new Vector2d(-43.00, 41.00), Math.toRadians(70.00))
+                        .splineToLinearHeading(new Pose2d(-39.00, 59.00, Math.toRadians(0.00)), Math.toRadians(45.00))
+                        .setReversed(false)
+                        .splineTo(new Vector2d(-27.00, 59.00), Math.toRadians(0.00))
+                        .splineTo(new Vector2d(13.00, 59.00), Math.toRadians(0.00))
+                        .splineTo(new Vector2d(27.83, 36.89), Math.toRadians(-56.15))
+                        .splineTo(new Vector2d(30.16, 7.28), Math.toRadians(-85.51))
+                        .build();
+
+
+        AddTrajectorySequenceCallback test4 = drive ->
+                drive.trajectorySequenceBuilder(new Pose2d(-39.00, 63.00, Math.toRadians(270.00)))
+                        .splineToLinearHeading(new Pose2d(-47.00, 30.00, Math.toRadians(250.00)), Math.toRadians(250.00))
+                        .setReversed(true)
+                        .splineTo(new Vector2d(-43.00, 41.00), Math.toRadians(70.00))
+                        .splineTo(new Vector2d(-38.23, 55.61), Math.toRadians(45.00))
+                        .splineTo(new Vector2d(-28.20, 58.91), Math.toRadians(0.00))
+                        .splineTo(new Vector2d(11.32, 58.91), Math.toRadians(0.00))
+                        .splineToLinearHeading(new Pose2d(34.07, 37.74, Math.toRadians(180.00)), Math.toRadians(-41.83))
+                        .splineToLinearHeading(new Pose2d(48.39, 32.48, Math.toRadians(180.00)), Math.toRadians(0.00))
+                        .build();
 
 
         AddTrajectorySequenceCallback[] trajArray = {blue2red, junk};
@@ -65,7 +91,7 @@ public class MeepMeepTesting {
 */
         RoadRunnerBotEntity myBot2 = new DefaultBotBuilder(meepMeep)
                 .setConstraints(70, 70, Math.toRadians(180), Math.toRadians(180), 15)
-                .followTrajectorySequence(test2);
+                .followTrajectorySequence(test4);
 
         /*
         Image img = null;
