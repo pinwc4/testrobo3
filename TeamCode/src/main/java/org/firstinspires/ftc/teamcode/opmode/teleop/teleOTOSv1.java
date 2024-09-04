@@ -22,7 +22,7 @@ import org.firstinspires.ftc.teamcode.pedroPathing.follower.Follower;
 import org.firstinspires.ftc.teamcode.pedroPathing.localization.Pose;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
 
-@TeleOp(group = "OTOSv1")
+@TeleOp(name = "OTOSv1")
 public class teleOTOSv1 extends OpMode {
     SampleMecanumDrive drive;
     IMU revIMU;
@@ -100,7 +100,7 @@ public class teleOTOSv1 extends OpMode {
         follower.update();
 
         elapsedtime = timer.milliseconds() - starttime;
-        
+
         telemetry.addData("loop ms", elapsedtime);
         telemetry.addData("OTOS X", String.format("%.5g",posOtos.x));
         telemetry.addData("OTOS Y", String.format("%.5g",posOtos.y));
