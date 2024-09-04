@@ -42,7 +42,7 @@ public class Robot {
     public Servo clawServo;
     public Claw clawSubsystem;
     public DistanceSensor rightDistanceSensor;
-    public HuskyLens huskyLens;
+    //public HuskyLens huskyLens;
     private Thread i2cThread;
     private final Object i2cLock = new Object();
     public Boolean stopThread = false;
@@ -75,8 +75,8 @@ public class Robot {
 
         rightDistanceSensor = hardwareMap.get(DistanceSensor.class, "rightDistance");
 
-        huskyLens = hardwareMap.get(HuskyLens.class, "huskyLens");
-        huskyLens.selectAlgorithm(HuskyLens.Algorithm.TAG_RECOGNITION);
+        //huskyLens = hardwareMap.get(HuskyLens.class, "huskyLens");
+        //huskyLens.selectAlgorithm(HuskyLens.Algorithm.TAG_RECOGNITION);
 
         CommandScheduler.getInstance().reset();
         CommandScheduler.getInstance().registerSubsystem(clawSubsystem);
@@ -90,12 +90,12 @@ public class Robot {
             double t_imuHeading;
             while (!stopThread) {
                 t_rightDistance = rightDistanceSensor.getDistance(DistanceUnit.INCH);
-                t_blocks = huskyLens.blocks();
+                //t_blocks = huskyLens.blocks();
                 t_navxAngles = navxgyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
                 t_imuHeading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
                 synchronized (i2cLock){
                     rightDistance = t_rightDistance;
-                    huskyBlocks = t_blocks;
+                    //huskyBlocks = t_blocks;
                     navxHeading = t_navxAngles.firstAngle;
                     imuHeading = t_imuHeading;
                 }

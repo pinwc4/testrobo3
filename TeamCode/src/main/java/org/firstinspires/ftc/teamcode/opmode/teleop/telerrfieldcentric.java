@@ -2,8 +2,9 @@ package org.firstinspires.ftc.teamcode.opmode.teleop;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
-import com.outoftheboxrobotics.photoncore.Photon;
+//import com.outoftheboxrobotics.photoncore.Photon;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -28,6 +29,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
  * <p>
  * See lines 42-57.
  */
+@Disabled
 @TeleOp(group = "rr field centric")
 public class telerrfieldcentric extends LinearOpMode {
 
