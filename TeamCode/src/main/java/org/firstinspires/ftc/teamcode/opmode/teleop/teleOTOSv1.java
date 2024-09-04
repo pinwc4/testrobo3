@@ -60,6 +60,7 @@ public class teleOTOSv1 extends OpMode {
 
         timer = new ElapsedTime();
 
+        /*
         myOtos = hardwareMap.get(SparkFunOTOS.class, "sensor_otos");
         //Set unit types
         myOtos.setLinearUnit(DistanceUnit.INCH);
@@ -74,6 +75,7 @@ public class teleOTOSv1 extends OpMode {
         myOtos.resetTracking();
         //Specify field location
         myOtos.setPosition(new SparkFunOTOS.Pose2D(0, 0, 0));
+        */
 
         //setup pedro follower
         follower = new Follower(hardwareMap);
@@ -91,11 +93,11 @@ public class teleOTOSv1 extends OpMode {
         starttime = timer.milliseconds();
         drive.update();
         poseEstimate = drive.getPoseEstimate();
-        posOtos = myOtos.getPosition();
+        //posOtos = myOtos.getPosition();
 
         navxAngles = navxgyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
 
-        revAngularVelocity = revIMU.getRobotAngularVelocity(AngleUnit.DEGREES);
+        //revAngularVelocity = revIMU.getRobotAngularVelocity(AngleUnit.DEGREES);
         revOrientation = revIMU.getRobotYawPitchRollAngles();
 
         follower.setTeleOpMovementVectors(-gamepad1.left_stick_y, -gamepad1.left_stick_x, -gamepad1.right_stick_x, false);
@@ -104,14 +106,14 @@ public class teleOTOSv1 extends OpMode {
         elapsedtime = timer.milliseconds() - starttime;
 
         telemetry.addData("loop ms", elapsedtime);
-        telemetry.addData("OTOS X", String.format(Locale.ENGLISH,"%.5g",posOtos.x));
-        telemetry.addData("OTOS Y", String.format(Locale.ENGLISH,"%.5g",posOtos.y));
-        telemetry.addData("OTOS heading", String.format(Locale.ENGLISH,"%.5g",Math.toDegrees(posOtos.h)));
+        //telemetry.addData("OTOS X", String.format(Locale.ENGLISH,"%.5g",posOtos.x));
+        //telemetry.addData("OTOS Y", String.format(Locale.ENGLISH,"%.5g",posOtos.y));
+        //telemetry.addData("OTOS heading", String.format(Locale.ENGLISH,"%.5g",Math.toDegrees(posOtos.h)));
         telemetry.addData("Pedro X", String.format(Locale.ENGLISH,"%.5g",follower.getPose().getX()));
         telemetry.addData("Pedro Y", String.format(Locale.ENGLISH,"%.5g",follower.getPose().getY()));
         telemetry.addData("Pedro heading", String.format(Locale.ENGLISH,"%.5g",Math.toDegrees(follower.getPose().getHeading())));
-        telemetry.addData("GB X", String.format(Locale.ENGLISH,"%.5g",poseEstimate.getX()));
-        telemetry.addData("GB Y", String.format(Locale.ENGLISH,"%.5g",poseEstimate.getY()));
+        telemetry.addData("GB X", String.format(Locale.ENGLISH,"%.5g",poseEstimate.getY()));
+        telemetry.addData("GB Y", String.format(Locale.ENGLISH,"%.5g",poseEstimate.getX()));
         telemetry.addData("GB heading", String.format(Locale.ENGLISH,"%.5g",Math.toDegrees(poseEstimate.getHeading())));
         telemetry.addData("navx heading", String.format(Locale.ENGLISH,"%.5g",navxAngles.firstAngle));
         telemetry.addData("imu heading", String.format(Locale.ENGLISH,"%.5g",revOrientation.getYaw(AngleUnit.DEGREES)));
