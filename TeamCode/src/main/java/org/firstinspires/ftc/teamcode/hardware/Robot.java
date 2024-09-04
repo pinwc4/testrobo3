@@ -17,7 +17,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
-import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
+//import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.subsystems.Claw;
 
 public class Robot {
@@ -29,7 +29,7 @@ public class Robot {
         BLUE,
         RED
     }
-    public SampleMecanumDrive drive;
+//    public SampleMecanumDrive drive;
     public IMU imu;
     public IntegratingGyroscope navxgyro;
     public NavxMicroNavigationSensor navxMicro;
@@ -63,8 +63,8 @@ public class Robot {
 
         navxgyro = (IntegratingGyroscope)navxMicro;
 
-        drive = new SampleMecanumDrive(hardwareMap);
-        drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+//        drive = new SampleMecanumDrive(hardwareMap);
+//        drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         controls = ControlType.FIELDCENTRIC;
 
         clawSubsystem = new Claw(clawServo);
