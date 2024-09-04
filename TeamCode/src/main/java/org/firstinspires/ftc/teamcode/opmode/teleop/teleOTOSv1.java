@@ -89,7 +89,7 @@ public class teleOTOSv1 extends OpMode {
     @Override
     public void loop() {
         starttime = timer.milliseconds();
-
+        drive.update();
         poseEstimate = drive.getPoseEstimate();
         posOtos = myOtos.getPosition();
 
@@ -107,6 +107,9 @@ public class teleOTOSv1 extends OpMode {
         telemetry.addData("OTOS X", String.format(Locale.ENGLISH,"%.5g",posOtos.x));
         telemetry.addData("OTOS Y", String.format(Locale.ENGLISH,"%.5g",posOtos.y));
         telemetry.addData("OTOS heading", String.format(Locale.ENGLISH,"%.5g",Math.toDegrees(posOtos.h)));
+        telemetry.addData("Pedro X", String.format(Locale.ENGLISH,"%.5g",follower.getPose().getX()));
+        telemetry.addData("Pedro Y", String.format(Locale.ENGLISH,"%.5g",follower.getPose().getY()));
+        telemetry.addData("Pedro heading", String.format(Locale.ENGLISH,"%.5g",Math.toDegrees(follower.getPose().getHeading())));
         telemetry.addData("GB X", String.format(Locale.ENGLISH,"%.5g",poseEstimate.getX()));
         telemetry.addData("GB Y", String.format(Locale.ENGLISH,"%.5g",poseEstimate.getY()));
         telemetry.addData("GB heading", String.format(Locale.ENGLISH,"%.5g",Math.toDegrees(poseEstimate.getHeading())));
