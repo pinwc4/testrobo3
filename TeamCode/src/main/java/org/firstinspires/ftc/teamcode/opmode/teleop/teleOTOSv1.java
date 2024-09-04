@@ -22,6 +22,8 @@ import org.firstinspires.ftc.teamcode.pedroPathing.follower.Follower;
 import org.firstinspires.ftc.teamcode.pedroPathing.localization.Pose;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
 
+import java.util.Locale;
+
 @TeleOp(name = "OTOSv1")
 public class teleOTOSv1 extends OpMode {
     SampleMecanumDrive drive;
@@ -102,14 +104,14 @@ public class teleOTOSv1 extends OpMode {
         elapsedtime = timer.milliseconds() - starttime;
 
         telemetry.addData("loop ms", elapsedtime);
-        telemetry.addData("OTOS X", String.format("%.5g",posOtos.x));
-        telemetry.addData("OTOS Y", String.format("%.5g",posOtos.y));
-        telemetry.addData("OTOS heading", String.format("%.5g",Math.toDegrees(posOtos.h)));
-        telemetry.addData("GB X", String.format("%.5g",poseEstimate.getX()));
-        telemetry.addData("GB Y", String.format("%.5g",poseEstimate.getY()));
-        telemetry.addData("GB heading", String.format("%.5g",Math.toDegrees(poseEstimate.getHeading())));
-        telemetry.addData("navx heading", String.format("%.5g",navxAngles.firstAngle));
-        telemetry.addData("imu heading", String.format("%.5g",revOrientation.getYaw(AngleUnit.DEGREES)));
+        telemetry.addData("OTOS X", String.format(Locale.ENGLISH,"%.5g",posOtos.x));
+        telemetry.addData("OTOS Y", String.format(Locale.ENGLISH,"%.5g",posOtos.y));
+        telemetry.addData("OTOS heading", String.format(Locale.ENGLISH,"%.5g",Math.toDegrees(posOtos.h)));
+        telemetry.addData("GB X", String.format(Locale.ENGLISH,"%.5g",poseEstimate.getX()));
+        telemetry.addData("GB Y", String.format(Locale.ENGLISH,"%.5g",poseEstimate.getY()));
+        telemetry.addData("GB heading", String.format(Locale.ENGLISH,"%.5g",Math.toDegrees(poseEstimate.getHeading())));
+        telemetry.addData("navx heading", String.format(Locale.ENGLISH,"%.5g",navxAngles.firstAngle));
+        telemetry.addData("imu heading", String.format(Locale.ENGLISH,"%.5g",revOrientation.getYaw(AngleUnit.DEGREES)));
     }
 
 }
