@@ -1,14 +1,15 @@
 package com.example.meepmeeptesting;
 
-import com.acmerobotics.roadrunner.geometry.Pose2d;
+
+
+import com.acmerobotics.roadrunner.Action;
+import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.Vector2d;
 import com.noahbres.meepmeep.MeepMeep;
-import com.noahbres.meepmeep.roadrunner.AddTrajectorySequenceCallback;
 import com.noahbres.meepmeep.roadrunner.DefaultBotBuilder;
-import com.noahbres.meepmeep.roadrunner.DriveShim;
 import com.noahbres.meepmeep.roadrunner.entity.RoadRunnerBotEntity;
-import com.acmerobotics.roadrunner.geometry.Vector2d;
-import com.noahbres.meepmeep.roadrunner.trajectorysequence.TrajectorySequence;
-import com.noahbres.meepmeep.roadrunner.trajectorysequence.TrajectorySequenceBuilder;
+
+
 
 import java.awt.Image;
 import java.io.File;
@@ -25,6 +26,7 @@ public class MeepMeepTesting {
     public static void main(String[] args) {
         MeepMeep meepMeep = new MeepMeep(1000);
 
+        /*
         AddTrajectorySequenceCallback blue2red = drive ->
                 drive.trajectorySequenceBuilder(new Pose2d(-63.00, -40.00, Math.toRadians(0.00)))
                         .splineTo(new Vector2d(-20.00, -40.00), Math.toRadians(0.00))
@@ -80,24 +82,6 @@ public class MeepMeepTesting {
                         .splineToLinearHeading(new Pose2d(48.39, 32.48, Math.toRadians(180.00)), Math.toRadians(0.00))
                         .build();
 
-        AddTrajectorySequenceCallback test5 = drive ->
-                drive.trajectorySequenceBuilder(new Pose2d(-41, 63.3, Math.toRadians(270.00)))
-                        .waitSeconds(1)
-                        .splineToLinearHeading(new Pose2d(-28.00, 39.00, Math.toRadians(315.00)), Math.toRadians(315.00))
-                        .lineToSplineHeading(new Pose2d(-40.00, 50.00, Math.toRadians(270.00)))
-                        .splineToLinearHeading(new Pose2d(-20.00, 12.00, Math.toRadians(0.00)), Math.toRadians(0.00))
-                        .splineTo(new Vector2d(36.04, 24.19), Math.toRadians(0))
-                        .splineToConstantHeading(new Vector2d(35, 40.5)/*45.00, 43.00*/,Math.toRadians(0.00))
-                        .waitSeconds(2.5)
-                        .addTemporalMarker(16.5, () -> { })
-                        .addTemporalMarker(17, () -> {})
-                        .lineTo(new Vector2d(53, 40.5/*55,42*/))
-                        .waitSeconds(1)
-                        .lineTo(new Vector2d(43, 28))
-                        .addTemporalMarker(21.5, () -> {})
-                        .addTemporalMarker(22, () -> {})
-                        .addTemporalMarker(22.5, () -> {})
-                        .build();
 
         AddTrajectorySequenceCallback test6 = drive ->
                 drive.trajectorySequenceBuilder(new Pose2d(-41, 63.3, Math.toRadians(270.00)))
@@ -144,12 +128,8 @@ public class MeepMeepTesting {
                         .lineTo(new Vector2d(40.00, 36.00))
                         .build();
 
-
-
-
-
-
         AddTrajectorySequenceCallback[] trajArray = {blue2red, junk};
+        */
 
 /*
         RoadRunnerBotEntity myBot2 = new DefaultBotBuilder(meepMeep)
@@ -159,7 +139,39 @@ public class MeepMeepTesting {
 */
         RoadRunnerBotEntity myBot2 = new DefaultBotBuilder(meepMeep)
                 .setConstraints(70, 70, Math.toRadians(180), Math.toRadians(180), 15)
-                .followTrajectorySequence(test9);
+                //.followTrajectorySequence(test9);
+                .build();
+
+
+
+
+        Action trajectoryAction9 = myBot2.getDrive().actionBuilder(new Pose2d(-41, 63.3, Math.toRadians(270.00)))
+                .splineTo(new Vector2d(-30.00, 36.00), Math.toRadians(-38.00))
+                .setReversed(true)
+                .splineTo(new Vector2d(-34.02, 39.26), Math.toRadians(142.00))
+                .splineToSplineHeading(new Pose2d(-39.37, 43.60, Math.toRadians(0.00)), Math.toRadians(142.00))
+                .splineToConstantHeading(new Vector2d(-30.00, 60.00), Math.toRadians(0.00))
+                .splineToConstantHeading(new Vector2d(9.00, 60.00), Math.toRadians(0.00))
+                .splineToConstantHeading(new Vector2d(42.00, 36.00), Math.toRadians(0.00))
+                .splineToConstantHeading(new Vector2d(50.00, 36.00), Math.toRadians(0.00))
+                .setReversed(false)
+                .lineToX(40.00)
+                .build();
+
+        Action trajectoryAction10 = myBot2.getDrive().actionBuilder(new Pose2d(-41, 63.3, Math.toRadians(270.00)))
+                .splineTo(new Vector2d(-30.00, 36.00), Math.toRadians(-38.00))
+                .setReversed(true)
+                .splineTo(new Vector2d(-34.02, 39.26), Math.toRadians(142.00))
+                .splineToSplineHeading(new Pose2d(-39.37, 43.60, Math.toRadians(0.00)), Math.toRadians(142.00))
+                .splineTo(new Vector2d(-30.00, 60.00), Math.toRadians(0.00))
+                .splineTo(new Vector2d(9.00, 60.00), Math.toRadians(0.00))
+                .splineTo(new Vector2d(42.00, 36.00), Math.toRadians(0.00))
+                .splineTo(new Vector2d(50.00, 36.00), Math.toRadians(0.00))
+                .setReversed(false)
+                .lineToX(40.00)
+                .build();
+
+                myBot2.runAction(trajectoryAction9);
 
         /*
         Image img = null;
