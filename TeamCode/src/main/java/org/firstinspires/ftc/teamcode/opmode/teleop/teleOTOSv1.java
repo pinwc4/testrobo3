@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.opmode.teleop;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.hardware.kauailabs.NavxMicroNavigationSensor;
+import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -22,6 +23,7 @@ import org.firstinspires.ftc.teamcode.pedroPathing.follower.Follower;
 import org.firstinspires.ftc.teamcode.pedroPathing.localization.Pose;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
 
+import java.util.List;
 import java.util.Locale;
 
 @TeleOp(name = "OTOSv1")
@@ -40,6 +42,7 @@ public class teleOTOSv1 extends OpMode {
     Orientation navxAngles;
     AngularVelocity revAngularVelocity;
     YawPitchRollAngles revOrientation;
+    List<LynxModule> allHubs;
 
     @Override
     public void init() {
@@ -84,6 +87,11 @@ public class teleOTOSv1 extends OpMode {
 
     @Override
     public void start() {
+        allHubs = hardwareMap.getAll(LynxModule.class);
+        for (LynxModule hub : allHubs) {
+            hub.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
+        }
+
         follower.startTeleopDrive();
         timer.reset();
     }
@@ -91,14 +99,18 @@ public class teleOTOSv1 extends OpMode {
     @Override
     public void loop() {
         starttime = timer.milliseconds();
-        //drive.update();
-        //poseEstimate = drive.getPoseEstimate();
+        for (LynxModule hub : allHubs) {
+            hub.clearBulkCache();
+        }
+
+        drive.update();
+        poseEstimate = drive.getPoseEstimate();
         //posOtos = myOtos.getPosition();
 
-        //navxAngles = navxgyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        navxAngles = navxgyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
 
         //revAngularVelocity = revIMU.getRobotAngularVelocity(AngleUnit.DEGREES);
-        //revOrientation = revIMU.getRobotYawPitchRollAngles();
+        revOrientation = revIMU.getRobotYawPitchRollAngles();
 
         follower.setTeleOpMovementVectors(-gamepad1.left_stick_y, -gamepad1.left_stick_x, -gamepad1.right_stick_x, false);
         follower.update();
@@ -112,11 +124,11 @@ public class teleOTOSv1 extends OpMode {
         telemetry.addData("Pedro X", String.format(Locale.ENGLISH,"%.5g",follower.getPose().getX()));
         telemetry.addData("Pedro Y", String.format(Locale.ENGLISH,"%.5g",follower.getPose().getY()));
         telemetry.addData("Pedro heading", String.format(Locale.ENGLISH,"%.5g",Math.toDegrees(follower.getPose().getHeading())));
-        //telemetry.addData("GB X", String.format(Locale.ENGLISH,"%.5g",poseEstimate.getY()));
-        //telemetry.addData("GB Y", String.format(Locale.ENGLISH,"%.5g",poseEstimate.getX()));
-        //telemetry.addData("GB heading", String.format(Locale.ENGLISH,"%.5g",Math.toDegrees(poseEstimate.getHeading())));
-        //telemetry.addData("navx heading", String.format(Locale.ENGLISH,"%.5g",navxAngles.firstAngle));
-        //telemetry.addData("imu heading", String.format(Locale.ENGLISH,"%.5g",revOrientation.getYaw(AngleUnit.DEGREES)));
+        telemetry.addData("GB X", String.format(Locale.ENGLISH,"%.5g",poseEstimate.getY()));
+        telemetry.addData("GB Y", String.format(Locale.ENGLISH,"%.5g",poseEstimate.getX()));
+        telemetry.addData("GB heading", String.format(Locale.ENGLISH,"%.5g",Math.toDegrees(poseEstimate.getHeading())));
+        telemetry.addData("navx heading", String.format(Locale.ENGLISH,"%.5g",navxAngles.firstAngle));
+        telemetry.addData("imu heading", String.format(Locale.ENGLISH,"%.5g",revOrientation.getYaw(AngleUnit.DEGREES)));
     }
 
 }
