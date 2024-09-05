@@ -91,14 +91,14 @@ public class teleOTOSv1 extends OpMode {
     @Override
     public void loop() {
         starttime = timer.milliseconds();
-        drive.update();
-        poseEstimate = drive.getPoseEstimate();
+        //drive.update();
+        //poseEstimate = drive.getPoseEstimate();
         //posOtos = myOtos.getPosition();
 
-        navxAngles = navxgyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        //navxAngles = navxgyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
 
         //revAngularVelocity = revIMU.getRobotAngularVelocity(AngleUnit.DEGREES);
-        revOrientation = revIMU.getRobotYawPitchRollAngles();
+        //revOrientation = revIMU.getRobotYawPitchRollAngles();
 
         follower.setTeleOpMovementVectors(-gamepad1.left_stick_y, -gamepad1.left_stick_x, -gamepad1.right_stick_x, false);
         follower.update();
@@ -112,11 +112,11 @@ public class teleOTOSv1 extends OpMode {
         telemetry.addData("Pedro X", String.format(Locale.ENGLISH,"%.5g",follower.getPose().getX()));
         telemetry.addData("Pedro Y", String.format(Locale.ENGLISH,"%.5g",follower.getPose().getY()));
         telemetry.addData("Pedro heading", String.format(Locale.ENGLISH,"%.5g",Math.toDegrees(follower.getPose().getHeading())));
-        telemetry.addData("GB X", String.format(Locale.ENGLISH,"%.5g",poseEstimate.getY()));
-        telemetry.addData("GB Y", String.format(Locale.ENGLISH,"%.5g",poseEstimate.getX()));
-        telemetry.addData("GB heading", String.format(Locale.ENGLISH,"%.5g",Math.toDegrees(poseEstimate.getHeading())));
-        telemetry.addData("navx heading", String.format(Locale.ENGLISH,"%.5g",navxAngles.firstAngle));
-        telemetry.addData("imu heading", String.format(Locale.ENGLISH,"%.5g",revOrientation.getYaw(AngleUnit.DEGREES)));
+        //telemetry.addData("GB X", String.format(Locale.ENGLISH,"%.5g",poseEstimate.getY()));
+        //telemetry.addData("GB Y", String.format(Locale.ENGLISH,"%.5g",poseEstimate.getX()));
+        //telemetry.addData("GB heading", String.format(Locale.ENGLISH,"%.5g",Math.toDegrees(poseEstimate.getHeading())));
+        //telemetry.addData("navx heading", String.format(Locale.ENGLISH,"%.5g",navxAngles.firstAngle));
+        //telemetry.addData("imu heading", String.format(Locale.ENGLISH,"%.5g",revOrientation.getYaw(AngleUnit.DEGREES)));
     }
 
 }
