@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.opmode.teleop;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.hardware.kauailabs.NavxMicroNavigationSensor;
+import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -22,6 +23,7 @@ import org.firstinspires.ftc.teamcode.pedroPathing.follower.Follower;
 import org.firstinspires.ftc.teamcode.pedroPathing.localization.Pose;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
 
+import java.util.List;
 import java.util.Locale;
 
 @TeleOp(name = "OTOSv1")
@@ -40,6 +42,7 @@ public class teleOTOSv1 extends OpMode {
     Orientation navxAngles;
     AngularVelocity revAngularVelocity;
     YawPitchRollAngles revOrientation;
+    List<LynxModule> allHubs;
 
     @Override
     public void init() {
@@ -84,6 +87,11 @@ public class teleOTOSv1 extends OpMode {
 
     @Override
     public void start() {
+        allHubs = hardwareMap.getAll(LynxModule.class);
+        for (LynxModule hub : allHubs) {
+            hub.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
+        }
+
         follower.startTeleopDrive();
         timer.reset();
     }
@@ -91,6 +99,10 @@ public class teleOTOSv1 extends OpMode {
     @Override
     public void loop() {
         starttime = timer.milliseconds();
+        for (LynxModule hub : allHubs) {
+            hub.clearBulkCache();
+        }
+
         drive.update();
         poseEstimate = drive.getPoseEstimate();
         //posOtos = myOtos.getPosition();
