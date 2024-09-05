@@ -1,14 +1,12 @@
 package org.firstinspires.ftc.teamcode.pedroPathing.localization.localizers;
 
-
-import com.acmerobotics.roadrunner.ftc.SparkFunOTOSCorrected;
-import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.pedroPathing.localization.Localizer;
 import org.firstinspires.ftc.teamcode.pedroPathing.localization.Pose;
+
 import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.MathFunctions;
 import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Vector;
 
@@ -76,11 +74,10 @@ public class OTOSLocalizer extends Localizer {
         // For the OTOS, left/right is the y axis and forward/backward is the x axis, with left being
         // positive y and forward being positive x. PI/2 radians is facing forward, and clockwise
         // rotation is negative rotation.
-        otos.setOffset(new SparkFunOTOS.Pose2D(0,0,Math.PI / 2));
-
+        otos.setOffset(new SparkFunOTOSCorrected.Pose2D(0, 0, Math.PI / 2));
         // TODO: replace these with your tuned multipliers
-        otos.setLinearScalar(1.0);
-        otos.setAngularScalar(1.0);
+        otos.setLinearScalar(0.987654321);
+        otos.setAngularScalar(0.995332);
 
         otos.calibrateImu();
         otos.resetTracking();
@@ -99,7 +96,7 @@ public class OTOSLocalizer extends Localizer {
      */
     @Override
     public Pose getPose() {
-        SparkFunOTOS.Pose2D pose = otos.getPosition();
+        SparkFunOTOSCorrected.Pose2D pose = otos.getPosition();
         return MathFunctions.addPoses(startPose, new Pose(pose.x, pose.y, pose.h));
     }
 
@@ -110,7 +107,7 @@ public class OTOSLocalizer extends Localizer {
      */
     @Override
     public Pose getVelocity() {
-        SparkFunOTOS.Pose2D OTOSVelocity = otos.getVelocity();
+        SparkFunOTOSCorrected.Pose2D OTOSVelocity = otos.getVelocity();
         return new Pose(OTOSVelocity.x, OTOSVelocity.y, OTOSVelocity.h);
     }
 
@@ -145,7 +142,7 @@ public class OTOSLocalizer extends Localizer {
     public void setPose(Pose setPose) {
         resetOTOS();
         Pose setOTOSPose = MathFunctions.subtractPoses(setPose, startPose);
-        otos.setPosition(new SparkFunOTOS.Pose2D(setOTOSPose.getX(), setOTOSPose.getY(), setOTOSPose.getHeading()));
+        otos.setPosition(new SparkFunOTOSCorrected.Pose2D(setOTOSPose.getX(), setOTOSPose.getY(), setOTOSPose.getHeading()));
     }
 
     /**

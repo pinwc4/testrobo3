@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.opmode.teleop;
 
+import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.hardware.kauailabs.NavxMicroNavigationSensor;
 import com.qualcomm.hardware.lynx.LynxModule;
@@ -28,10 +29,10 @@ import java.util.Locale;
 
 @TeleOp(name = "OTOSv1")
 public class teleOTOSv1 extends OpMode {
-    SampleMecanumDrive drive;
-    IMU revIMU;
-    IntegratingGyroscope navxgyro;
-    NavxMicroNavigationSensor navxMicro;
+    //SampleMecanumDrive drive;
+    //IMU revIMU;
+    //IntegratingGyroscope navxgyro;
+    //NavxMicroNavigationSensor navxMicro;
     ElapsedTime timer;
     SparkFunOTOS myOtos;
     SparkFunOTOS.Pose2D posOtos;
@@ -39,27 +40,27 @@ public class teleOTOSv1 extends OpMode {
     Pose2d poseEstimate;
     double starttime;
     double elapsedtime;
-    Orientation navxAngles;
-    AngularVelocity revAngularVelocity;
-    YawPitchRollAngles revOrientation;
+    //Orientation navxAngles;
+    //AngularVelocity revAngularVelocity;
+    //YawPitchRollAngles revOrientation;
     List<LynxModule> allHubs;
 
     @Override
     public void init() {
         //Configure roadrunner to read from dead wheels
-        drive = new SampleMecanumDrive(hardwareMap);
-        drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        //drive = new SampleMecanumDrive(hardwareMap);
+        //drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         //Init the built in IMU
-        revIMU = hardwareMap.get(IMU.class, "imu");
-        IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
-                RevHubOrientationOnRobot.LogoFacingDirection.UP,
-                RevHubOrientationOnRobot.UsbFacingDirection.FORWARD));
-        revIMU.initialize(parameters);
+        //revIMU = hardwareMap.get(IMU.class, "imu");
+        //IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
+        //        RevHubOrientationOnRobot.LogoFacingDirection.UP,
+        //        RevHubOrientationOnRobot.UsbFacingDirection.FORWARD));
+       // revIMU.initialize(parameters);
 
         //External Navx gyro
-        navxMicro = hardwareMap.get(NavxMicroNavigationSensor.class, "navx");
-        navxgyro = (IntegratingGyroscope)navxMicro;
+        //navxMicro = hardwareMap.get(NavxMicroNavigationSensor.class, "navx");
+        //navxgyro = (IntegratingGyroscope)navxMicro;
 
         timer = new ElapsedTime();
 
@@ -87,10 +88,6 @@ public class teleOTOSv1 extends OpMode {
 
     @Override
     public void start() {
-        allHubs = hardwareMap.getAll(LynxModule.class);
-        for (LynxModule hub : allHubs) {
-            hub.setBulkCachingMode(LynxModule.BulkCachingMode.MANUAL);
-        }
 
         follower.startTeleopDrive();
         timer.reset();
@@ -99,18 +96,15 @@ public class teleOTOSv1 extends OpMode {
     @Override
     public void loop() {
         starttime = timer.milliseconds();
-        for (LynxModule hub : allHubs) {
-            hub.clearBulkCache();
-        }
 
-        drive.update();
-        poseEstimate = drive.getPoseEstimate();
+        //drive.update();
+        //poseEstimate = drive.getPoseEstimate();
         //posOtos = myOtos.getPosition();
 
-        navxAngles = navxgyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        //navxAngles = navxgyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
 
         //revAngularVelocity = revIMU.getRobotAngularVelocity(AngleUnit.DEGREES);
-        revOrientation = revIMU.getRobotYawPitchRollAngles();
+        //revOrientation = revIMU.getRobotYawPitchRollAngles();
 
         follower.setTeleOpMovementVectors(-gamepad1.left_stick_y, -gamepad1.left_stick_x, -gamepad1.right_stick_x, false);
         follower.update();
@@ -124,11 +118,11 @@ public class teleOTOSv1 extends OpMode {
         telemetry.addData("Pedro X", String.format(Locale.ENGLISH,"%.5g",follower.getPose().getX()));
         telemetry.addData("Pedro Y", String.format(Locale.ENGLISH,"%.5g",follower.getPose().getY()));
         telemetry.addData("Pedro heading", String.format(Locale.ENGLISH,"%.5g",Math.toDegrees(follower.getPose().getHeading())));
-        telemetry.addData("GB X", String.format(Locale.ENGLISH,"%.5g",poseEstimate.getY()));
-        telemetry.addData("GB Y", String.format(Locale.ENGLISH,"%.5g",poseEstimate.getX()));
-        telemetry.addData("GB heading", String.format(Locale.ENGLISH,"%.5g",Math.toDegrees(poseEstimate.getHeading())));
-        telemetry.addData("navx heading", String.format(Locale.ENGLISH,"%.5g",navxAngles.firstAngle));
-        telemetry.addData("imu heading", String.format(Locale.ENGLISH,"%.5g",revOrientation.getYaw(AngleUnit.DEGREES)));
+        //telemetry.addData("GB X", String.format(Locale.ENGLISH,"%.5g",poseEstimate.getY()));
+        //telemetry.addData("GB Y", String.format(Locale.ENGLISH,"%.5g",poseEstimate.getX()));
+        //telemetry.addData("GB heading", String.format(Locale.ENGLISH,"%.5g",Math.toDegrees(poseEstimate.getHeading())));
+        //telemetry.addData("navx heading", String.format(Locale.ENGLISH,"%.5g",navxAngles.firstAngle));
+        //telemetry.addData("imu heading", String.format(Locale.ENGLISH,"%.5g",revOrientation.getYaw(AngleUnit.DEGREES)));
     }
 
 }
