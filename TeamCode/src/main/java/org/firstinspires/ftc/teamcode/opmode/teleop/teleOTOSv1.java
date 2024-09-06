@@ -22,6 +22,10 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 import org.firstinspires.ftc.teamcode.pedroPathing.follower.Follower;
 import org.firstinspires.ftc.teamcode.pedroPathing.localization.Pose;
+import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.BezierLine;
+import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Path;
+import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.PathChain;
+import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Point;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
 
 import java.util.List;
@@ -44,6 +48,7 @@ public class teleOTOSv1 extends OpMode {
     //AngularVelocity revAngularVelocity;
     //YawPitchRollAngles revOrientation;
     List<LynxModule> allHubs;
+    PathChain uPath;
 
     @Override
     public void init() {
@@ -84,6 +89,15 @@ public class teleOTOSv1 extends OpMode {
         //setup pedro follower
         follower = new Follower(hardwareMap);
         follower.setPose(new Pose(0,0, 0));
+
+        uPath = follower.pathBuilder()
+                .addPath(new BezierLine(new Point(0,0, Point.CARTESIAN), new Point(64,0, Point.CARTESIAN)))
+                .setConstantHeadingInterpolation(0)
+                .addPath(new BezierLine(new Point(64,0, Point.CARTESIAN), new Point(64,-72, Point.CARTESIAN)))
+                .setConstantHeadingInterpolation(0)
+                .addPath(new BezierLine(new Point(64,-72, Point.CARTESIAN), new Point(30,-72, Point.CARTESIAN)))
+                .setConstantHeadingInterpolation(0)
+                .build();
     }
 
     @Override
@@ -105,6 +119,14 @@ public class teleOTOSv1 extends OpMode {
 
         //revAngularVelocity = revIMU.getRobotAngularVelocity(AngleUnit.DEGREES);
         //revOrientation = revIMU.getRobotYawPitchRollAngles();
+
+        if (gamepad1.x) {
+            follower.startTeleopDrive();
+        }
+
+        if (gamepad1.a && !follower.isBusy()) {
+            follower.followPath(uPath);
+        }
 
         follower.setTeleOpMovementVectors(-gamepad1.left_stick_y, -gamepad1.left_stick_x, -gamepad1.right_stick_x, false);
         follower.update();
