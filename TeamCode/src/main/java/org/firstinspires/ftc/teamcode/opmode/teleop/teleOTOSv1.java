@@ -91,11 +91,11 @@ public class teleOTOSv1 extends OpMode {
         follower.setPose(new Pose(0,0, 0));
 
         uPath = follower.pathBuilder()
-                .addPath(new BezierLine(new Point(0,0, Point.CARTESIAN), new Point(0,40, Point.CARTESIAN)))
+                .addPath(new BezierLine(new Point(0,0, Point.CARTESIAN), new Point(60,0, Point.CARTESIAN)))
                 .setConstantHeadingInterpolation(0)
-                .addPath(new BezierLine(new Point(0,40, Point.CARTESIAN), new Point(30,40, Point.CARTESIAN)))
+                .addPath(new BezierLine(new Point(60,0, Point.CARTESIAN), new Point(60,-60, Point.CARTESIAN)))
                 .setConstantHeadingInterpolation(0)
-                .addPath(new BezierLine(new Point(30,40, Point.CARTESIAN), new Point(30,35, Point.CARTESIAN)))
+                .addPath(new BezierLine(new Point(60,-60, Point.CARTESIAN), new Point(50,-60, Point.CARTESIAN)))
                 .setConstantHeadingInterpolation(0)
                 .setPathEndTimeoutConstraint(0)
                 .build();
