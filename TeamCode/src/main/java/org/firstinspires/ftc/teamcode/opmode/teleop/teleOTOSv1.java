@@ -75,12 +75,13 @@ public class teleOTOSv1 extends OpMode {
 
         voltageSensor = hardwareMap.getAll(PhotonLynxVoltageSensor.class).iterator().next();
         CustomPIDFCoefficients lockHeadingPID = new CustomPIDFCoefficients(
-                5,
+                1,
                 0,
-                0.08,
+                0,
                 0);
         headingControl = new PIDFController(lockHeadingPID);
         headingControl.setTargetPosition(0);
+
 
         //Configure roadrunner to read from dead wheels
         //drive = new SampleMecanumDrive(hardwareMap);
