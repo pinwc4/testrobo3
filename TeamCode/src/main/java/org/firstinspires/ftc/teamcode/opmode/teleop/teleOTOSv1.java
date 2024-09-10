@@ -25,6 +25,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 import org.firstinspires.ftc.teamcode.pedroPathing.follower.Follower;
 import org.firstinspires.ftc.teamcode.pedroPathing.localization.Pose;
 import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.BezierLine;
+import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.BezierPoint;
 import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Path;
 import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.PathChain;
 import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Point;
@@ -135,6 +136,11 @@ public class teleOTOSv1 extends OpMode {
 
         if (gamepad1.a && !follower.isBusy()) {
             follower.followPath(uPath);
+        }
+
+        if (gamepad1.b && !follower.isBusy()) {
+            Point tpoint = new Point(follower.getPose().getX(), follower.getPose().getY(), Point.CARTESIAN);
+            follower.holdPoint(new BezierPoint(tpoint), follower.getPose().getHeading());
         }
 
         double newVolts = voltageSensor.getCachedVoltage();
