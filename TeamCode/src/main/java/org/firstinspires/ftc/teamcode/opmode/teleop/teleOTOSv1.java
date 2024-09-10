@@ -181,23 +181,23 @@ public class teleOTOSv1 extends OpMode {
         }
 
         if (lockHeading == false) {
-            follower.setTeleOpMovementVectors(-gamepad1.left_stick_y, -gamepad1.left_stick_x, -gamepad1.right_stick_x, false);
+            dblHeadingOutput = -gamepad1.right_stick_x;
         } else {
             if(Math.abs(gamepad1.right_stick_x) > 0.05) {
                 dblLastStickTime = dblCurrentTime;
-                follower.setTeleOpMovementVectors(-gamepad1.left_stick_y, -gamepad1.left_stick_x, -gamepad1.right_stick_x, false);
+                dblHeadingOutput = -gamepad1.right_stick_x;
             } else if ((dblCurrentTime - dblLastStickTime) < dblDelayTime) {
                 dblTargetHeading = dblCurrentHeading;
-                follower.setTeleOpMovementVectors(-gamepad1.left_stick_y, -gamepad1.left_stick_x, -gamepad1.right_stick_x, false);
+                dblHeadingOutput = -gamepad1.right_stick_x;
             } else {
                 dblHeadingDeviation = dblCurrentHeading - dblTargetHeading;
                 dblHeadingDeviation = angleWrap(dblHeadingDeviation);
                 headingControl.updatePosition(dblHeadingDeviation);
                 dblHeadingOutput = headingControl.runPIDF();
-                follower.setTeleOpMovementVectors(-gamepad1.left_stick_y, -gamepad1.left_stick_x, dblHeadingOutput, false);
             }
 
         }
+        follower.setTeleOpMovementVectors(-gamepad1.left_stick_y, -gamepad1.left_stick_x, dblHeadingOutput, false);
         follower.update();
 
         elapsedtime = timer.milliseconds() - starttime;
