@@ -26,6 +26,7 @@ import org.firstinspires.ftc.teamcode.pedroPathing.follower.Follower;
 import org.firstinspires.ftc.teamcode.pedroPathing.localization.Pose;
 import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.BezierLine;
 import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.BezierPoint;
+import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.MathFunctions;
 import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Path;
 import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.PathChain;
 import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Point;
@@ -55,6 +56,15 @@ public class teleOTOSv1 extends OpMode {
     PathChain uPath;
     double voltage;
     PhotonLynxVoltageSensor voltageSensor;
+    boolean lockHeading = false;
+    private double dblCurrentHeading = 0;
+    private double dblTargetHeading = 0;
+    private double dblHeadingDeviation = 0;
+    private double dblHeadingOutput = 0;
+    private double dblCurrentTime = 0;
+    private double dblDelayTime = 200;
+    private double dblLastStickTime = 0;
+
 
     @Override
     public void init() {
@@ -120,6 +130,8 @@ public class teleOTOSv1 extends OpMode {
     @Override
     public void loop() {
         starttime = timer.milliseconds();
+        dblCurrentTime = starttime;
+        dblCurrentHeading = follower.getPose().getHeading();
 
         //drive.update();
         //poseEstimate = drive.getPoseEstimate();
@@ -132,6 +144,14 @@ public class teleOTOSv1 extends OpMode {
 
         if (gamepad1.x) {
             follower.startTeleopDrive();
+        }
+
+        if (gamepad1.y) {
+            if (lockHeading == false) {
+                lockHeading = true;
+            } else {
+                lockHeading = false;
+            }
         }
 
         if (gamepad1.a && !follower.isBusy()) {
@@ -148,13 +168,32 @@ public class teleOTOSv1 extends OpMode {
             voltage = newVolts;
         }
 
-        follower.setTeleOpMovementVectors(-gamepad1.left_stick_y, -gamepad1.left_stick_x, -gamepad1.right_stick_x, false);
+        if (lockHeading = false) {
+            follower.setTeleOpMovementVectors(-gamepad1.left_stick_y, -gamepad1.left_stick_x, -gamepad1.right_stick_x, false);
+        } else {
+            if(Math.abs(gamepad1.right_stick_x) > 0.05) {
+                dblLastStickTime = dblCurrentTime;
+                follower.setTeleOpMovementVectors(-gamepad1.left_stick_y, -gamepad1.left_stick_x, -gamepad1.right_stick_x, false);
+            } else if ((dblCurrentTime - dblLastStickTime) < dblDelayTime) {
+                dblTargetHeading = dblCurrentHeading;
+                follower.setTeleOpMovementVectors(-gamepad1.left_stick_y, -gamepad1.left_stick_x, -gamepad1.right_stick_x, false);
+            } else {
+                dblHeadingDeviation = dblCurrentHeading - dblTargetHeading;
+                dblHeadingDeviation = angleWrap(dblHeadingDeviation);
+                //headingControl.updatePosition(dblHeadingDeviation);
+                //dblHeadingOutput = headingControl.runPIDF();
+                dblHeadingOutput = MathFunctions.clamp(dblHeadingDeviation * 0.03, -1, 1);
+                follower.setTeleOpMovementVectors(-gamepad1.left_stick_y, -gamepad1.left_stick_x, dblHeadingOutput, false);
+            }
+
+        }
         follower.update();
 
         elapsedtime = timer.milliseconds() - starttime;
 
         telemetry.addData("loop ms", elapsedtime);
         telemetry.addData("Min volts", String.format(Locale.ENGLISH,"%.5g",voltage));
+        telemetry.addData("Heading lock", lockHeading);
         //telemetry.addData("OTOS X", String.format(Locale.ENGLISH,"%.5g",posOtos.x));
         //telemetry.addData("OTOS Y", String.format(Locale.ENGLISH,"%.5g",posOtos.y));
         //telemetry.addData("OTOS heading", String.format(Locale.ENGLISH,"%.5g",Math.toDegrees(posOtos.h)));
@@ -166,6 +205,19 @@ public class teleOTOSv1 extends OpMode {
         //telemetry.addData("GB heading", String.format(Locale.ENGLISH,"%.5g",Math.toDegrees(poseEstimate.getHeading())));
         //telemetry.addData("navx heading", String.format(Locale.ENGLISH,"%.5g",navxAngles.firstAngle));
         //telemetry.addData("imu heading", String.format(Locale.ENGLISH,"%.5g",revOrientation.getYaw(AngleUnit.DEGREES)));
+    }
+
+    public double angleWrap(double radians) {
+
+        while (radians > Math.PI) {
+            radians -= 2 * Math.PI;
+        }
+        while (radians < -Math.PI) {
+            radians += 2 * Math.PI;
+        }
+
+        // keep in mind that the result is in radians
+        return radians;
     }
 
 }
