@@ -30,6 +30,9 @@ import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.MathFunctions;
 import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Path;
 import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.PathChain;
 import org.firstinspires.ftc.teamcode.pedroPathing.pathGeneration.Point;
+import org.firstinspires.ftc.teamcode.pedroPathing.tuning.FollowerConstants;
+import org.firstinspires.ftc.teamcode.pedroPathing.util.CustomPIDFCoefficients;
+import org.firstinspires.ftc.teamcode.pedroPathing.util.PIDFController;
 import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
 
 import java.util.List;
@@ -64,12 +67,21 @@ public class teleOTOSv1 extends OpMode {
     private double dblCurrentTime = 0;
     private double dblDelayTime = 200;
     private double dblLastStickTime = 0;
+    private PIDFController headingControl;
 
 
     @Override
     public void init() {
 
         voltageSensor = hardwareMap.getAll(PhotonLynxVoltageSensor.class).iterator().next();
+        CustomPIDFCoefficients lockHeadingPID = new CustomPIDFCoefficients(
+                5,
+                0,
+                0.08,
+                0);
+        headingControl = new PIDFController(lockHeadingPID);
+        headingControl.setTargetPosition(0);
+
         //Configure roadrunner to read from dead wheels
         //drive = new SampleMecanumDrive(hardwareMap);
         //drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -180,9 +192,8 @@ public class teleOTOSv1 extends OpMode {
             } else {
                 dblHeadingDeviation = dblCurrentHeading - dblTargetHeading;
                 dblHeadingDeviation = angleWrap(dblHeadingDeviation);
-                //headingControl.updatePosition(dblHeadingDeviation);
-                //dblHeadingOutput = headingControl.runPIDF();
-                dblHeadingOutput = MathFunctions.clamp(Math.toDegrees(dblHeadingDeviation) * 0.003, -1, 1);
+                headingControl.updatePosition(dblHeadingDeviation);
+                dblHeadingOutput = headingControl.runPIDF();
                 follower.setTeleOpMovementVectors(-gamepad1.left_stick_y, -gamepad1.left_stick_x, dblHeadingOutput, false);
             }
 
