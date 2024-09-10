@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode.opmode.teleop;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.outoftheboxrobotics.photoncore.Photon;
+import com.outoftheboxrobotics.photoncore.hardware.PhotonLynxVoltageSensor;
 import com.qualcomm.hardware.kauailabs.NavxMicroNavigationSensor;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
@@ -31,6 +33,7 @@ import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
 import java.util.List;
 import java.util.Locale;
 
+@Photon
 @TeleOp(name = "OTOSv1")
 public class teleOTOSv1 extends OpMode {
     //SampleMecanumDrive drive;
@@ -49,9 +52,13 @@ public class teleOTOSv1 extends OpMode {
     //YawPitchRollAngles revOrientation;
     List<LynxModule> allHubs;
     PathChain uPath;
+    double voltage;
+    PhotonLynxVoltageSensor voltageSensor;
 
     @Override
     public void init() {
+
+        voltageSensor = hardwareMap.getAll(PhotonLynxVoltageSensor.class).iterator().next();
         //Configure roadrunner to read from dead wheels
         //drive = new SampleMecanumDrive(hardwareMap);
         //drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -106,6 +113,7 @@ public class teleOTOSv1 extends OpMode {
 
         follower.startTeleopDrive();
         timer.reset();
+        voltage = voltageSensor.getCachedVoltage();
     }
 
     @Override
@@ -129,12 +137,18 @@ public class teleOTOSv1 extends OpMode {
             follower.followPath(uPath);
         }
 
+        double newVolts = voltageSensor.getCachedVoltage();
+        if (newVolts < voltage) {
+            voltage = newVolts;
+        }
+
         follower.setTeleOpMovementVectors(-gamepad1.left_stick_y, -gamepad1.left_stick_x, -gamepad1.right_stick_x, false);
         follower.update();
 
         elapsedtime = timer.milliseconds() - starttime;
 
         telemetry.addData("loop ms", elapsedtime);
+        telemetry.addData("Min volts", String.format(Locale.ENGLISH,"%.5g",voltage));
         //telemetry.addData("OTOS X", String.format(Locale.ENGLISH,"%.5g",posOtos.x));
         //telemetry.addData("OTOS Y", String.format(Locale.ENGLISH,"%.5g",posOtos.y));
         //telemetry.addData("OTOS heading", String.format(Locale.ENGLISH,"%.5g",Math.toDegrees(posOtos.h)));
