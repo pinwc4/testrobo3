@@ -168,7 +168,7 @@ public class teleOTOSv1 extends OpMode {
             voltage = newVolts;
         }
 
-        if (lockHeading = false) {
+        if (lockHeading == false) {
             follower.setTeleOpMovementVectors(-gamepad1.left_stick_y, -gamepad1.left_stick_x, -gamepad1.right_stick_x, false);
         } else {
             if(Math.abs(gamepad1.right_stick_x) > 0.05) {
@@ -182,7 +182,7 @@ public class teleOTOSv1 extends OpMode {
                 dblHeadingDeviation = angleWrap(dblHeadingDeviation);
                 //headingControl.updatePosition(dblHeadingDeviation);
                 //dblHeadingOutput = headingControl.runPIDF();
-                dblHeadingOutput = MathFunctions.clamp(dblHeadingDeviation * 0.03, -1, 1);
+                dblHeadingOutput = MathFunctions.clamp(Math.toDegrees(dblHeadingDeviation) * 0.003, -1, 1);
                 follower.setTeleOpMovementVectors(-gamepad1.left_stick_y, -gamepad1.left_stick_x, dblHeadingOutput, false);
             }
 
