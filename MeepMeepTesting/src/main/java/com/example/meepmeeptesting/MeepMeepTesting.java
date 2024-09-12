@@ -166,7 +166,8 @@ public class MeepMeepTesting {
                 .splineTo(new Vector2d(-30.00, 60.00), Math.toRadians(0.00))
                 .splineTo(new Vector2d(9.00, 60.00), Math.toRadians(0.00))
                 .splineTo(new Vector2d(42.00, 36.00), Math.toRadians(0.00))
-                .splineTo(new Vector2d(50.00, 36.00), Math.toRadians(0.00))
+                .lineToX(50)
+                //.splineTo(new Vector2d(50.00, 36.00), Math.toRadians(0.00))
                 .setReversed(false)
                 .lineToX(40.00)
                 .build();
@@ -181,7 +182,7 @@ public class MeepMeepTesting {
         }
          */
 
-        meepMeep.setBackground(MeepMeep.Background.FIELD_CENTERSTAGE_JUICE_DARK)
+        meepMeep.setBackground(MeepMeep.Background.FIELD_INTO_THE_DEEP_JUICE_DARK)
                 .setDarkMode(true)
         //meepMeep.setBackground(img)
                 .setBackgroundAlpha(0.95f)
