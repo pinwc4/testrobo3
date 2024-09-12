@@ -1,8 +1,9 @@
 package org.firstinspires.ftc.teamcode.opmode.auto;
 
-import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.acmerobotics.roadrunner.geometry.Vector2d;
+
+import com.acmerobotics.roadrunner.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -12,15 +13,17 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 import org.firstinspires.ftc.teamcode.hardware.Robot;
-import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequence;
+
+@Disabled
 @Autonomous(name = "Test 3 Red")
 public class autotest3red extends OpMode {
     public Robot robot;
     public Pose2d startPose;
-    public TrajectorySequence hometoboard;
+    //public TrajectorySequence hometoboard;
 
     @Override
     public void init() {
+        /*
         robot = new Robot(hardwareMap);
         startPose = new Pose2d(-63, -40, Math.toRadians(0));
 
@@ -32,22 +35,30 @@ public class autotest3red extends OpMode {
 
     }
 
+
+         */
     /*
     @Override
     public void init_loop() {
 
     }
     */
-
+    }
     @Override
     public void start() {
+        /*
         robot.drive.setPoseEstimate(startPose);
         robot.drive.followTrajectorySequence(hometoboard);
         robot.drive.update();
+
+         */
     }
 
     @Override
     public void loop() {
+
+        /*
+
         robot.drive.update();
         Pose2d poseEstimate = robot.drive.getPoseEstimate();
         Orientation angles = robot.navxgyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
@@ -60,7 +71,7 @@ public class autotest3red extends OpMode {
         telemetry.addData("navx heading", angles.firstAngle);
         telemetry.addData("imu heading", orientation.getYaw(AngleUnit.DEGREES));
         telemetry.update();
-    }
+    */
 
     /*
     @Override
@@ -68,4 +79,5 @@ public class autotest3red extends OpMode {
 
     }
     */
+        }
 }

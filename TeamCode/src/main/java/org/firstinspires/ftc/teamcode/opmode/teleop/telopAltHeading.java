@@ -1,25 +1,25 @@
 package org.firstinspires.ftc.teamcode.opmode.teleop;
 
-import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.acmerobotics.roadrunner.util.Angle;
-import com.acmerobotics.roadrunner.geometry.Vector2d;
-import com.acmerobotics.roadrunner.control.PIDFController;
+
+import com.acmerobotics.roadrunner.Pose2d;
 import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.arcrobotics.ftclib.command.button.Button;
 import com.arcrobotics.ftclib.command.button.GamepadButton;
+import com.arcrobotics.ftclib.controller.PIDFController;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.arcrobotics.ftclib.gamepad.ToggleButtonReader;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.commands.ClawCommand;
 import org.firstinspires.ftc.teamcode.hardware.Robot;
-import org.firstinspires.ftc.teamcode.roadrunner.drive.DriveConstants;
-import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
+
 import org.firstinspires.ftc.teamcode.subsystems.DataStorage;
 
+@Disabled
 @TeleOp(name="Alt Heading Opmode")
 public class telopAltHeading extends OpMode {
 
@@ -51,10 +51,10 @@ public class telopAltHeading extends OpMode {
         clawButton = new GamepadButton(driverGamepad, GamepadKeys.Button.A);
         clawButton.whenPressed(new ClawCommand(robot));
 
-        drivePowers = new Pose2d();
+        //drivePowers = new Pose2d();
         lockHeadingReader = new ToggleButtonReader(driverGamepad, GamepadKeys.Button.X);
-        headingController = new PIDFController(SampleMecanumDrive.HEADING_PID);
-        headingController.setTargetPosition(0);
+        //headingController = new PIDFController(SampleMecanumDrive.HEADING_PID);
+        //headingController.setTargetPosition(0);
         turnAngle = 0;
         robot.controls = Robot.ControlType.FIELDCENTRIC;
 
@@ -79,6 +79,7 @@ public class telopAltHeading extends OpMode {
     //After start is complete this method runs repeatably after the start button is pressed
     @Override
     public void loop() {
+        /*
         double startTime = robot.timer.milliseconds();
         driverGamepad.readButtons();
         lockHeadingReader.readValue();
@@ -174,6 +175,8 @@ public class telopAltHeading extends OpMode {
         //}
         telemetry.update();
         CommandScheduler.getInstance().run();
+
+         */
     }
 
     //This runs when the stop button is pressed on the driver hub

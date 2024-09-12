@@ -1,8 +1,9 @@
 package org.firstinspires.ftc.teamcode.opmode.auto;
 
-import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.acmerobotics.roadrunner.geometry.Vector2d;
+
+import com.acmerobotics.roadrunner.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -13,17 +14,15 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 import org.firstinspires.ftc.teamcode.hardware.Robot;
-import org.firstinspires.ftc.teamcode.roadrunner.drive.DriveConstants;
-import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequence;
-import com.acmerobotics.roadrunner.trajectory.constraints.MecanumVelocityConstraint;
 
+@Disabled
 @Autonomous(name = "Test 4 Red")
 public class autotest4red extends OpMode {
     public Robot robot;
     public Pose2d startPose;
-    public MecanumVelocityConstraint fastModeVel;
-    public TrajectorySequence hometoboard;
-    public TrajectorySequence boardtosomewhere;
+    //public MecanumVelocityConstraint fastModeVel;
+    //public TrajectorySequence hometoboard;
+    //public TrajectorySequence boardtosomewhere;
 
     @Override
     public void init() {
@@ -34,6 +33,7 @@ public class autotest4red extends OpMode {
 
     @Override
     public void init_loop() {
+        /*
         double rightDistance = robot.rightDistanceSensor.getDistance(DistanceUnit.INCH);
         telemetry.addData("right distance", rightDistance);
         double yPose = -40;
@@ -56,19 +56,25 @@ public class autotest4red extends OpMode {
         boardtosomewhere = robot.drive.trajectorySequenceBuilder(hometoboard.end())
                 .lineToConstantHeading(new Vector2d(58, 20))
                 .build();
+
+         */
     }
 
 
     @Override
     public void start() {
+        /*
         robot.drive.setPoseEstimate(startPose);
         robot.drive.followTrajectorySequence(hometoboard);
         robot.drive.update();
         robot.drive.followTrajectorySequenceAsync(boardtosomewhere);
+
+         */
     }
 
     @Override
     public void loop() {
+        /*
         robot.drive.update();
         Pose2d poseEstimate = robot.drive.getPoseEstimate();
         Orientation angles = robot.navxgyro.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
@@ -81,6 +87,8 @@ public class autotest4red extends OpMode {
         telemetry.addData("navx heading", angles.firstAngle);
         telemetry.addData("imu heading", orientation.getYaw(AngleUnit.DEGREES));
         telemetry.update();
+
+         */
     }
 
     /*

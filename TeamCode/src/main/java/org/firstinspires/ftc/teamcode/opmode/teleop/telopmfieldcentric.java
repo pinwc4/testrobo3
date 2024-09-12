@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.opmode.teleop;
 
-import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.acmerobotics.roadrunner.geometry.Vector2d;
+import com.acmerobotics.roadrunner.Pose2d;
+
 import com.outoftheboxrobotics.photoncore.Photon;
 import com.qualcomm.hardware.kauailabs.NavxMicroNavigationSensor;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
@@ -18,11 +18,12 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
-import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.roadrunner.SparkFunOTOSDrive;
+
 
 @TeleOp(name="Field Centric OpMode")
 public class telopmfieldcentric  extends OpMode {
-    public SampleMecanumDrive drive;
+    public SparkFunOTOSDrive drive;
     public IMU imu;
 
     public IntegratingGyroscope navxgyro;
@@ -36,14 +37,14 @@ public class telopmfieldcentric  extends OpMode {
      */
     @Override
     public void init() {
-        drive = new SampleMecanumDrive(hardwareMap);
+        drive = new SparkFunOTOSDrive(hardwareMap, new Pose2d(0,0,0));
         imu = hardwareMap.get(IMU.class, "imu");
 
         IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
                 RevHubOrientationOnRobot.LogoFacingDirection.UP,
                 RevHubOrientationOnRobot.UsbFacingDirection.FORWARD));
 
-        drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        //drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         // Without this, the REV Hub's orientation is assumed to be logo up / USB forward
         imu.initialize(parameters);
         navxMicro = hardwareMap.get(NavxMicroNavigationSensor.class, "navx");
@@ -74,6 +75,7 @@ public class telopmfieldcentric  extends OpMode {
      */
     @Override
     public void loop() {
+        /*
         starttime = timer.milliseconds();
         // Read pose
         Pose2d poseEstimate = drive.getPoseEstimate();
@@ -114,6 +116,8 @@ public class telopmfieldcentric  extends OpMode {
         telemetry.addData("navx heading", angles.firstAngle);
         telemetry.addData("imu heading", orientation.getYaw(AngleUnit.DEGREES));
         telemetry.update();
+
+         */
     }
 
     @Override

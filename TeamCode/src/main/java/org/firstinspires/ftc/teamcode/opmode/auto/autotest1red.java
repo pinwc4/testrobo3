@@ -1,27 +1,29 @@
 package org.firstinspires.ftc.teamcode.opmode.auto;
 
 
-import com.acmerobotics.roadrunner.trajectory.constraints.MecanumVelocityConstraint;
+import com.acmerobotics.roadrunner.Pose2d;
+;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import org.firstinspires.ftc.teamcode.roadrunner.drive.DriveConstants;
-import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
-import org.firstinspires.ftc.teamcode.roadrunner.trajectorysequence.TrajectorySequence;
-import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.acmerobotics.roadrunner.geometry.Vector2d;
+
+import org.firstinspires.ftc.teamcode.roadrunner.SparkFunOTOSDrive;
 
 
+@Disabled
 @Autonomous(name = "Test 1 Red")
 
 public class autotest1red extends LinearOpMode {
 
     public void runOpMode() throws InterruptedException{
-        SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
+
 
         Pose2d startPose = new Pose2d(-67, -40, Math.toRadians(0));
 
-        drive.setPoseEstimate(startPose);
+        SparkFunOTOSDrive drive = new SparkFunOTOSDrive(hardwareMap, startPose);
 
+        //drive.setPoseEstimate(startPose);
+        /*
         TrajectorySequence hometoboard = drive.trajectorySequenceBuilder(startPose)
                 .splineToSplineHeading(new Pose2d(-14.75, -42.64, Math.toRadians(60.00)), Math.toRadians(55.00))
                 .splineToSplineHeading(new Pose2d(-4.77, -1.69, Math.toRadians(60.00)), Math.toRadians(90.00))
@@ -33,6 +35,8 @@ public class autotest1red extends LinearOpMode {
 
         drive.followTrajectorySequence(hometoboard);
         drive.update();
+
+         */
     }
 
 }
