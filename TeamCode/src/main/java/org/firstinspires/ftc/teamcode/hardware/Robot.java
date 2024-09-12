@@ -1,10 +1,12 @@
 package org.firstinspires.ftc.teamcode.hardware;
 
+import com.acmerobotics.roadrunner.Pose2d;
 import com.arcrobotics.ftclib.command.CommandScheduler;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.qualcomm.hardware.dfrobot.HuskyLens;
 import com.qualcomm.hardware.kauailabs.NavxMicroNavigationSensor;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
+import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.Gamepad;
@@ -21,7 +23,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 import org.firstinspires.ftc.teamcode.opmode.teleop.telopAltHeading;
-import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.roadrunner.SparkFunOTOSDrive;
+//import org.firstinspires.ftc.teamcode.roadrunner.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.subsystems.Claw;
 
 public class Robot {
@@ -33,7 +36,7 @@ public class Robot {
         BLUE,
         RED
     }
-    public SampleMecanumDrive drive;
+    public SparkFunOTOSDrive drive;
     public IMU imu;
     public IntegratingGyroscope navxgyro;
     public NavxMicroNavigationSensor navxMicro;
@@ -67,8 +70,8 @@ public class Robot {
 
         navxgyro = (IntegratingGyroscope)navxMicro;
 
-        drive = new SampleMecanumDrive(hardwareMap);
-        drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        drive = new SparkFunOTOSDrive(hardwareMap, new Pose2d(0,0,0));
+        //drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         controls = ControlType.FIELDCENTRIC;
 
         clawSubsystem = new Claw(clawServo);
