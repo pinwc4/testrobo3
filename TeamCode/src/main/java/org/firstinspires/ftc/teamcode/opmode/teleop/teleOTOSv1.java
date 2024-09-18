@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode.opmode.teleop;
 
 import com.acmerobotics.dashboard.FtcDashboard;
-import com.acmerobotics.roadrunner.geometry.Pose2d;
+//import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.outoftheboxrobotics.photoncore.Photon;
 import com.outoftheboxrobotics.photoncore.hardware.PhotonLynxVoltageSensor;
 import com.qualcomm.hardware.kauailabs.NavxMicroNavigationSensor;
@@ -49,7 +49,7 @@ public class teleOTOSv1 extends OpMode {
     SparkFunOTOS myOtos;
     SparkFunOTOS.Pose2D posOtos;
     Follower follower;
-    Pose2d poseEstimate;
+    //Pose2d poseEstimate;
     double starttime;
     double elapsedtime;
     //Orientation navxAngles;
