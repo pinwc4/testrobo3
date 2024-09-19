@@ -16,8 +16,6 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.roadrunner.messages.PoseMessage;
 
-import com.qualcomm.hardware.sparkfun.SparkFunOTOS;
-
 /**
  * Experimental extension of MecanumDrive that uses the SparkFun OTOS sensor for localization.
  * <p>
@@ -40,7 +38,7 @@ public class SparkFunOTOSDrive extends MecanumDrive {
         // tweaked slightly to compensate for imperfect mounting (eg. 1.3 degrees).
 
         // RR localizer note: These units are inches and radians.
-        public SparkFunOTOS.Pose2D offset = new SparkFunOTOS.Pose2D(1.0333, 0.006, Math.toRadians(0.5323));
+        public SparkFunOTOS.Pose2D offset = new SparkFunOTOS.Pose2D(0, 0, Math.toRadians(0));
 
         // Here we can set the linear and angular scalars, which can compensate for
         // scaling issues with the sensor measurements. Note that as of firmware
@@ -58,17 +56,17 @@ public class SparkFunOTOSDrive extends MecanumDrive {
         // multiple speeds to get an average, then set the linear scalar to the
         // inverse of the error. For example, if you move the robot 100 inches and
         // the sensor reports 103 inches, set the linear scalar to 100/103 = 0.971
-        public double linearScalar = 0.9756;//1;//0.987654321;
-        public double angularScalar = 0.9936;//1;//0.995332;
+        public double linearScalar = 1.0;
+        public double angularScalar = 1.0;
     }
 
     public static SparkFunOTOSDrive.Params PARAMS = new SparkFunOTOSDrive.Params();
-    public SparkFunOTOS otos;
+    public SparkFunOTOSCorrected otos;
     private Pose2d lastOtosPose = pose;
 
     public SparkFunOTOSDrive(HardwareMap hardwareMap, Pose2d pose) {
         super(hardwareMap, pose);
-        otos = hardwareMap.get(SparkFunOTOS.class,"sensor_otos");
+        otos = hardwareMap.get(SparkFunOTOSCorrected.class,"sensor_otos");
         // RR localizer note:
         // don't change the units, it will stop Dashboard field view from working properly
         // and might cause various other issues
