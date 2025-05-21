@@ -7,7 +7,7 @@ public class Claw {
     private Servo srvClaw;
     private boolean bolClawOpen;
     private double dblOpenPosition = 0;
-    private double dblClosedPosition = 1;
+    private double dblClosedPosition = 0.35;
 
     public Claw(Servo m_srvClaw) {
         srvClaw = m_srvClaw;
