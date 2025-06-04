@@ -16,7 +16,7 @@ public class VisionTest extends LinearOpMode {
     private OpenCvCamera camera;
     
     // Name of the Webcam to be set in the config
-    private String webcamName = "Webcam 1";
+    private String webcamName = "webcam";
 
     @Override
     public void runOpMode() throws InterruptedException {
