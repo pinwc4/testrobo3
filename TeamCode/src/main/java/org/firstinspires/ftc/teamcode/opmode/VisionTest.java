@@ -43,5 +43,7 @@ public class VisionTest extends LinearOpMode {
         }
 
         waitForStart();
+        camera.stopStreaming();
+        camera.closeCameraDevice();
     }
 }
