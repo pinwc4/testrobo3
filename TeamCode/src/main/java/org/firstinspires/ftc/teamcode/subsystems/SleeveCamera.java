@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode.subsystems;
 
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 
 import org.firstinspires.ftc.robotcore.internal.camera.calibration.CameraCalibration;
 import org.firstinspires.ftc.vision.VisionProcessor;
@@ -25,7 +27,7 @@ public class SleeveCamera implements VisionProcessor {
     // Width and height for the bounding box
     public static int REGION_WIDTH = 25;
     public static int REGION_HEIGHT = 25;
-
+    public Rect selectedRec = new Rect(180, 410, 25, 25);
     // Color definitions
     private final Scalar
             YELLOW  = new Scalar(255, 255, 0),
@@ -41,14 +43,14 @@ public class SleeveCamera implements VisionProcessor {
             SLEEVE_TOPLEFT_ANCHOR_POINT.y + REGION_HEIGHT);
 
     // Running variable storing the parking position
-    private volatile ParkingPosition position = ParkingPosition.LEFT;
+    public ParkingPosition position = ParkingPosition.LEFT;
 
     @Override
     public void init(int width, int height, CameraCalibration calibration) {
     }
 
     @Override
-    public Mat processFrame(Mat input, long captureTimeNanos) {
+    public Object processFrame(Mat input, long captureTimeNanos) {
         // Get the submat frame, and then sum all the values
         Mat areaMat = input.submat(new Rect(sleeve_pointA, sleeve_pointB));
         Scalar sumColors = Core.sumElems(areaMat);
@@ -59,46 +61,57 @@ public class SleeveCamera implements VisionProcessor {
         // Change the bounding box color based on the sleeve color
         if (sumColors.val[0] == minColor) {
             position = ParkingPosition.CENTER;
-            Imgproc.rectangle(
-                    input,
-                    sleeve_pointA,
-                    sleeve_pointB,
-                    CYAN,
-                    2
-            );
         } else if (sumColors.val[1] == minColor) {
             position = ParkingPosition.RIGHT;
-            Imgproc.rectangle(
-                    input,
-                    sleeve_pointA,
-                    sleeve_pointB,
-                    MAGENTA,
-                    2
-            );
         } else {
             position = ParkingPosition.LEFT;
-            Imgproc.rectangle(
-                    input,
-                    sleeve_pointA,
-                    sleeve_pointB,
-                    YELLOW,
-                    2
-            );
+
         }
 
         // Release and return input
         areaMat.release();
-        return input;
+        return null;
     }
 
     @Override
     public void onDrawFrame(Canvas canvas, int onscreenWidth, int onscreenHeight, float scaleBmpPxToCanvasPx, float scaleCanvasDensity, Object userContext) {
+        Paint selectedPaint = new Paint();
 
+        android.graphics.Rect andSelectedRec = makeGraphicsRect(selectedRec, scaleBmpPxToCanvasPx);
+        switch (position) {
+            case CENTER:
+                selectedPaint.setColor(Color.CYAN);
+                selectedPaint.setStyle(Paint.Style.STROKE);
+                selectedPaint.setStrokeWidth(scaleCanvasDensity * 4);
+                canvas.drawRect(andSelectedRec, selectedPaint);
+                break;
+            case RIGHT:
+                selectedPaint.setColor(Color.MAGENTA);
+                selectedPaint.setStyle(Paint.Style.STROKE);
+                selectedPaint.setStrokeWidth(scaleCanvasDensity * 4);
+                canvas.drawRect(andSelectedRec, selectedPaint);
+                break;
+            default:
+                selectedPaint.setColor(Color.YELLOW);
+                selectedPaint.setStyle(Paint.Style.STROKE);
+                selectedPaint.setStrokeWidth(scaleCanvasDensity * 4);
+                canvas.drawRect(andSelectedRec, selectedPaint);
+                break;
+        }
     }
 
     // Returns an enum being the current position where the robot will park
     public ParkingPosition getPosition() {
         return position;
+    }
+
+    private android.graphics.Rect makeGraphicsRect(Rect rect, float scaleBmpPxToCanvasPx) {
+        int left = Math.round(rect.x * scaleBmpPxToCanvasPx);
+        int top = Math.round(rect.y * scaleBmpPxToCanvasPx);
+        int right = left + Math.round(rect.width * scaleBmpPxToCanvasPx);
+        int bottom = top + Math.round(rect.height * scaleBmpPxToCanvasPx);
+
+        return new android.graphics.Rect(left, top, right, bottom);
     }
 
 }
