@@ -19,7 +19,9 @@ public class PortalTest extends OpMode {
     private VisionPortal visionPortal;
 
     public int left = 220;
-    public int top = 195;
+    //line up to right edge of tile for top of 180
+    //line up in the center for top of
+    public int top = 250;
     public PredominantColorProcessor colorSensor;
 
     @Override
